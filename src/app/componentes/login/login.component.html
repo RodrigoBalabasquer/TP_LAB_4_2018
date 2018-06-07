@@ -1,0 +1,31 @@
+ <div class="container" >
+  <div class="jumbotron" style="padding:25px;background-color: darkblue;border-radius: 10px">
+    <form action="return true;">
+      <h1 style="font-family: Verdana, Geneva, Tahoma, sans-serif;text-align: center;color: darkgoldenrod">Inicio de sesión</h1>
+      
+      <!--<div style="text-align: center;">
+        <img class="imgcontainer" src="./assets/imagenes/login.png" alt="Avatar" >
+      </div>-->
+      <div class="container">
+        <p *ngIf="mensaje != ''">{{mensaje}}</p>
+
+        <label><b>Usuario</b></label>
+        <input type="text" placeholder="Usuario"  [(ngModel)]="usuario"  name="uname" required>
+
+        <label><b>Clave</b></label>
+        <input type="password" placeholder="Clave"  [(ngModel)]="clave" name="psw" required>
+            
+        <div style="text-align: center">
+          <button (click)="Entrar()" >Ingresar</button>
+          <button (click)="Cargar()" >Ingresar como invitado</button>
+        </div>
+      </div>
+
+      <div class="container" style="text-align: center" >
+        <label>No tiene usuario?</label>
+        <button type="button" class="aceptbtn" routerLink="/Registro" >Registrarse</button>
+      </div>
+     
+    </form>
+  </div>
+</div>
