@@ -13,12 +13,10 @@ export class VerificarService {
   }
   canActivate(route: ActivatedRouteSnapshot): boolean | Promise<boolean> {
 
-    debugger;
     this._token = localStorage.getItem('Token');
     let token:any = this._token!=null?JSON.parse(this._token):null;
     let result: Promise<boolean> = this.http.verificarToken(token, 'VerificarToken')
       .then(datos => {
-        debugger;
         if (datos.esValido == true)
           return true
         else
@@ -34,10 +32,16 @@ export class VerificarService {
   crearToken(datos: any) {
     let result: Promise<boolean> = this.http.crearToken("CrearToken", datos).then(
       (misDatos) => {
-        debugger;
         localStorage.setItem("Token", JSON.stringify(misDatos.respuesta));
         return true;
       });
+    return result;
+  }
+  recuperToken(token: any)
+  { 
+    let result: Promise<any> = this.http.recuperarToken(token).then((misDatos) => {
+        return misDatos;
+      });;
     return result;
   }
 }

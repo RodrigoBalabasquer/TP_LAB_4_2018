@@ -7,7 +7,9 @@ export class Usuario {
     public contrasenia: string,
     public tipo: number,
     public foto: string,
-    public fechaNacimiento: string 
+    public fechaNacimiento: string, 
+    public habilitado: boolean,
+    public sexo: string
     ) { 
         this.legajo = legajo;
         this.usuario = usuario;
@@ -17,5 +19,7 @@ export class Usuario {
         this.fechaNacimiento = fechaNacimiento;
         this.apellido = apellido;
         this.foto = foto;
+        this.habilitado = habilitado;
+        this.sexo = sexo;
     }
 }

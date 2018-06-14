@@ -1,4 +1,95 @@
 <app-menu></app-menu>
-<p>
-  principal works!
-</p>
+<div class="container">
+
+  <div class="hero">
+    <h1 style="font-size:50px;text-align: center;color: darkred;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Remiseria Balabasquer</h1><br />
+    <p style="font-size:25px;text-align: center;color: darkred;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Bienvenido señor/a {{usuario}}</p>
+  </div>
+  <br>
+
+  <div *ngIf="TIPO==1">
+  <ul class="list-group bordesolido">
+    <li class="list-group-item list-group-item-info transparent-style">
+      <a routerLink="/Remiseros">
+        <div class="media">
+          <!--<div class="media-left">
+            <img src="./assets/imagenes/saladejuegos.png" class="media-object imagenDeMenu">
+          </div>-->
+          <div class="media-body">
+            <h2 style="color: #F2E6E6;" class="media-heading">Lista de Empleados</h2>
+          </div>
+      </div>
+      </a>
+    </li>
+    <li class="list-group-item list-group-item-info transparent-style">
+      <a routerLink="/Vehiculos">
+        <div class="media">
+          <!--<div class="media-left">
+            <img src="./assets/imagenes/listado.png" class="media-object imagenDeMenu">
+          </div>-->
+          <div class="media-body">
+            <h2 style="color: #F2E6E6;" class="media-heading">Listados de Vehiculos</h2>
+          </div>
+
+        </div>
+      </a>
+    </li>
+    <li class="list-group-item list-group-item-info transparent-style">
+      <a routerLink="/Listado">
+        <div class="media">
+          <!--<div class="media-left">
+            <img src="./assets/imagenes/listado.png" class="media-object imagenDeMenu">
+          </div>-->
+          <div class="media-body">
+            <h2 style="color: #F2E6E6;" class="media-heading">Listados de viajes</h2>
+          </div>
+
+        </div>
+      </a>
+    </li>
+  </ul>
+  </div>
+
+  <div *ngIf="TIPO==2">
+  <ul class="list-group bordesolido">
+    <li class="list-group-item list-group-item-info transparent-style">
+      <a routerLink="/Viaje">
+        <div class="media">
+          <!--<div class="media-left">
+            <img src="./assets/imagenes/saladejuegos.png" class="media-object imagenDeMenu">
+          </div>-->
+          <div class="media-body">
+            <h2 style="color: #F2E6E6;" class="media-heading">Pedir Viaje</h2>
+          </div>
+      </div>
+      </a>
+    </li>
+    <li class="list-group-item list-group-item-info transparent-style">
+      <a routerLink="/listaViajes">
+        <div class="media">
+          <!--<div class="media-left">
+            <img src="./assets/imagenes/listado.png" class="media-object imagenDeMenu">
+          </div>-->
+          <div class="media-body">
+            <h2 style="color: #F2E6E6;" class="media-heading">Listado de viajes</h2>
+          </div>
+
+        </div>
+      </a>
+    </li>
+    <li class="list-group-item list-group-item-info transparent-style">
+      <a routerLink="/Encuesta">
+        <div class="media">
+          <!--<div class="media-left">
+            <img src="./assets/imagenes/listado.png" class="media-object imagenDeMenu">
+          </div>-->
+          <div class="media-body">
+            <h2 style="color: #F2E6E6;" class="media-heading">Encuesta</h2>
+          </div>
+
+        </div>
+      </a>
+    </li>
+  </ul>
+  </div>
+</div>

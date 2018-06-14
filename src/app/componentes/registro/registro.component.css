@@ -1,0 +1,52 @@
+form {
+    padding: 10px;
+    background:darkred;
+}
+.container {
+    padding: 16px;
+}
+label{
+    color: darkgoldenrod;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.labelO{
+    color: greenyellow;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+@media(min-width: 1200px){
+    .imgcontainer {
+        width: 400px;
+        height: 400px;
+        border-radius: 250px; 
+    }
+}
+@media (min-width: 992px ) and (max-width: 1199px){
+    .imgcontainer {
+        width: 400px;
+        height: 400px;
+        border-radius: 250px; 
+    }
+}
+@media (min-width: 768px) and (max-width: 991px){
+    .imgcontainer {
+        width: 400px;
+        height: 400px;
+        border-radius: 250px; 
+    }
+}
+@media (max-width: 767px) {
+    .imgcontainer {
+        width: 250px;
+        height: 250px;
+        border-radius: 250px; 
+    }
+}
+@media (max-width: 480px){
+    .imgcontainer {
+        width: 200px;
+        height: 200px;
+        border-radius: 250px; 
+    }
+}

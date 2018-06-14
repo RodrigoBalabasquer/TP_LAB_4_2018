@@ -2,7 +2,11 @@
 require_once 'Usuario.php';
 class UsuarioApi extends Usuario 
 {
-    
+    public function TraerTodos($request, $response, $args) {
+        $todosLasMascotas=Usuario::TraerTodosLosRemiseros();
+        $newresponse = $response->withJson($todosLasMascotas, 200);  
+        return $newresponse;
+    }
     public function CargarUno($request, $response, $args) {
        
        $objDelaRespuesta= new stdclass();
@@ -101,6 +105,36 @@ class UsuarioApi extends Usuario
         $token = $ArrayDeParametros["Token"];
         $data = AutentificadorJWT::ObtenerData($token);
         $objDelaRespuesta->respuesta = $data;
+        return $response->withJson($objDelaRespuesta, 200);
+   }
+   public function DesabilitarUsuario($request, $response, $args)
+   {
+        $objDelaRespuesta= new stdclass();
+        
+        $ArrayDeParametros = $request->getParsedBody();
+        $legajo = $ArrayDeParametros["Legajo"];
+        
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios SET habilitado=false WHERE Legajo = :legajo");
+        $consulta->bindParam(':legajo',$legajo);
+        $consulta->execute();	
+        
+        $objDelaRespuesta->respuesta="Empleado suspendido éxitosamente.";
+        return $response->withJson($objDelaRespuesta, 200);
+   }
+   public function HabilitarUsuario($request, $response, $args)
+   {
+        $objDelaRespuesta= new stdclass();
+        
+        $ArrayDeParametros = $request->getParsedBody();
+        $legajo = $ArrayDeParametros["Legajo"];
+        
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios SET habilitado=true WHERE Legajo = :legajo");
+        $consulta->bindParam(':legajo',$legajo);
+        $consulta->execute();	
+        
+        $objDelaRespuesta->respuesta="Empleado reabilitado éxitosamente.";
         return $response->withJson($objDelaRespuesta, 200);
    }
 }

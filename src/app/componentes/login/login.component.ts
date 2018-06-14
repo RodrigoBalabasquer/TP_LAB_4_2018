@@ -12,7 +12,7 @@ import { VerificarService } from '../../servicios/verificar.service';
 export class LoginComponent implements OnInit {
 
   miServicioUsuario:UsuariosService;
-  miServicioVerificacion: VerificarService
+  miServicioVerificacion: VerificarService;
   usuario = '';
   clave= '';
   logeando=true;

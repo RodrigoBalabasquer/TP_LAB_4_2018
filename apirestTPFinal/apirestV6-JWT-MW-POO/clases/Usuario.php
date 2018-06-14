@@ -19,6 +19,13 @@ class Usuario
 			$consulta->execute();			
 			return $consulta->fetchAll(PDO::FETCH_CLASS, "Usuario");		
     }
+    public static function TraerTodosLosRemiseros()
+    {
+			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+			$consulta =$objetoAccesoDato->RetornarConsulta("select * from usuarios Where tipo=3");
+			$consulta->execute();			
+			return $consulta->fetchAll(PDO::FETCH_CLASS, "Usuario");		
+    }
     public static function TraerUnUsuario($usuario,$pass)
 	{
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 

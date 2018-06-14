@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="jumbotron" style="padding:25px;background-color: darkblue;border-radius: 10px">
+    <form [formGroup]="registroForm" (ngSubmit)="Registrar()">
+      <h1 style="font-family: Verdana, Geneva, Tahoma, sans-serif;text-align: center;color: darkgoldenrod">Registro</h1>
+
+      <!-- <div style="text-align: center;">
+        <img class="imgcontainer" src="./assets/imagenes/registro.png" alt="Avatar" >
+      </div> -->
+      <div>
+        <div>
+          <div>
+            <!--<img [src]="RutasService.rutaImagenesSitio + 'user.png'" class="img-circle img-responsive center-block" width="128" height="128">-->
+            <br>
+            <div class="form-group">
+              <!--<img src="" id="fotoPrevia" class="img-thumbnail">-->
+              <label class="labelO">* Campos obligatorios</label>
+              <br>
+              <label class="labelO">* 5 caracteres mínimo</label><input type="text" class="form-control" [formControl]="usuario" [(ngModel)]="miUsuario.usuario" placeholder="Nombre de usuario">
+              <br> 
+              <label class="labelO">* 5 caracteres mínimo</label>
+              <input type="text" class="form-control" [formControl]="nombre" [(ngModel)]="miUsuario.nombre"
+                placeholder="Nombre" autofocus>
+              <br>
+              <label class="labelO">* 5 caracteres mínimo</label><input type="text" class="form-control" [formControl]="apellido" [(ngModel)]="miUsuario.apellido" placeholder="Apellido" autofocus>
+              <br>
+              <label class="labelO">* Campo obligatorio</label><br>Fecha de nacimiento: <input id="date" type="date"  [formControl]="nacimiento" [(ngModel)]="miUsuario.fechaNacimiento" class="form-control">
+              <br>
+              <label class="labelO">* Campo obligatorio</label><br>Sexo: 
+              <select [formControl]="sexo" [(ngModel)]="miUsuario.sexo" class="form-control" id="select">
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+              </select>
+              <br>
+              <label class="labelO">* 5 caracteres mínimo</label><input type="password" class="form-control" [formControl]="clave" [(ngModel)]="miUsuario.contrasenia" placeholder="Contraseña">
+              <br>
+              <label class="labelO">* misma contraseña</label><input type="password" class="form-control" [formControl]="copiaClave" [(ngModel)]="claveCopia" placeholder="Repita Contraseña">
+              <br>
+
+              <div class="row">
+                <div class="col-lg-0 col-md-0 col-sm-0 col-xs-0">
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <button type="submit" id="botonRegistro" class="btn btn-success" style="width: 100%" [disabled]="!registroForm.valid">Registrar</button>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <button class="btn btn-danger" style="width: 100%" (click)="cancelar()">Cancelar</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>

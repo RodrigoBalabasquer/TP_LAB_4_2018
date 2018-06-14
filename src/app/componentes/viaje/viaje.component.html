@@ -1,0 +1,10 @@
+<app-menu></app-menu>
+<br>
+<br>
+Dirección desde: <input type="text" placeholder="Buscar por localización" [(ngModel)]="direccionDesde" class="form-control">
+Dirección hasta: <input type="text" placeholder="Buscar por localización" [(ngModel)]="direccionHasta" class="form-control">
+<button type="button" (click)="Trazar()" >TrazarRuta</button>
+<agm-map >
+  <agm-direction *ngIf="dir" 
+   [origin]="dir.origin" [destination]="dir.destination"></agm-direction>
+</agm-map>
