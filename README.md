@@ -1,6 +1,6 @@
-#Rodrigo Balabasquer 4B
+# Rodrigo Balabasquer 4B
 
-# Link de la pagina <a href="rodrigobalabasquer.esy.es">Remiserìa</a>
+# Link de la pagina rodrigobalabasquer.esy.es
 
 
 # Remiseria
