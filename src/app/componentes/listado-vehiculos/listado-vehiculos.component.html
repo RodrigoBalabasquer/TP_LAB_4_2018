@@ -16,6 +16,15 @@
       <td>{{vehiculo.patente}}</td>
       <td>Disponible</td>
       <td><img  style="width:100px;height:100px" class='fotoGrilla'  src="../../../assets/vehiculos/{{vehiculo.foto}}" /></td>
+      <td><button class="btn btn-danger" (click)="Desabilitar(vehiculo.id)" style="width: 100%">Desabilitar</button></td>
+    </tr> 
+    <tr *ngIf="vehiculo.estado == 2" style="background-color: orangered">
+      <td>{{vehiculo.modelo}} </td> 
+      <td>{{vehiculo.marca}} </td>
+      <td>{{vehiculo.patente}}</td>
+      <td>No disponible</td>
+      <td><img  style="width:100px;height:100px" class='fotoGrilla'  src="../../../assets/vehiculos/{{vehiculo.foto}}" /></td>
+      <td><button class="btn btn-success" (click)="Habilitar(vehiculo.id)" style="width: 100%">Habilitar</button></td>
     </tr> 
     <!--<tr *ngIf="usuario.habilitado == 0" style="background-color: red">
       <td>{{usuario.legajo}} </td> 

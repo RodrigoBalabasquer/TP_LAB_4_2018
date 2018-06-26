@@ -12,19 +12,19 @@ export class PrincipalComponent implements OnInit {
   verificarService : VerificarService;
   TIPO : number;
   usuario: string;
+  foto: string;
   constructor(VerificarService:VerificarService) {
     this.verificarService = VerificarService;
    }
 
   ngOnInit() {
-    debugger;
     let tokenjs = localStorage.getItem("Token");
     let token:any = tokenjs!=null?JSON.parse(tokenjs):null;
     this.verificarService.recuperToken(token).then(
       (datos) => {
-        debugger;
         this.TIPO = datos.respuesta.tipo;
         this.usuario = datos.respuesta.usuario;
+        this.foto = "./assets/usuarios/"+datos.respuesta.foto;
       }
     );
   }

@@ -3,8 +3,8 @@ require_once 'Usuario.php';
 class UsuarioApi extends Usuario 
 {
     public function TraerTodos($request, $response, $args) {
-        $todosLasMascotas=Usuario::TraerTodosLosRemiseros();
-        $newresponse = $response->withJson($todosLasMascotas, 200);  
+        $todosLosRemiseros=Usuario::TraerTodosLosRemiseros();
+        $newresponse = $response->withJson($todosLosRemiseros, 200);  
         return $newresponse;
     }
     public function CargarUno($request, $response, $args) {
@@ -17,25 +17,46 @@ class UsuarioApi extends Usuario
        $apellido = $ArrayDeParametros["apellido"];
        $tipo = $ArrayDeParametros['tipo'];
        $fechaDeNacimiento = $ArrayDeParametros['fechaDeNacimiento'];
-       $foto = $ArrayDeParametros['foto'];
+       //$foto = $ArrayDeParametros['foto'];
        $Usuario = $ArrayDeParametros['usuario'];
        $contrasenia = $ArrayDeParametros['contrasenia'];
        $sexo = $ArrayDeParametros['sexo'];
-       
+       $estado = $ArrayDeParametros['estado'];
+
+       $destino="../../Remiseria/src/assets/usuarios/";
+       //$destino="../../assets/usuarios/";
+       $archivos = $request->getUploadedFiles();
+       $nombreAnterior=$archivos['foto']->getClientFilename();
+       $extension= explode(".", $nombreAnterior);
+       $extension=array_reverse($extension);
+       $NombreFoto = $Usuario.'.'.$extension[0];
+       $archivos['foto']->moveTo($destino.$NombreFoto);
+
+
        $miUsuario = new Usuario();
        $miUsuario->nombre=$nombre;
        $miUsuario->tipo=$tipo;
        $miUsuario->fechaDeNacimiento=$fechaDeNacimiento;
-       $miUsuario->foto=$foto;
+       $miUsuario->foto=$NombreFoto;
        $miUsuario->Usuario=$Usuario;
        $miUsuario->apellido = $apellido;
        $miUsuario->contrasenia=md5($contrasenia);
        $miUsuario->sexo = $sexo;
-       $miUsuario->habilitado = true;
-       $miUsuario->InsertarUsuarioParametros();
+       $miUsuario->estado = $estado;
+       
+       $ultimoLegajo =  $miUsuario->InsertarUsuarioParametros();
 
-       $objDelaRespuesta->respuesta="Se guardo el usuario exitosamente.";
+       $objDelaRespuesta->respuesta=$ultimoLegajo;
        //$objDelaRespuesta->respuesta=$miUsuario;
+       return $response->withJson($objDelaRespuesta, 200);
+   }
+   public function UsuarioVehiculo($request, $response, $args){
+       $objDelaRespuesta= new stdclass();
+       $ArrayDeParametros = $request->getParsedBody();
+       $usuario= $ArrayDeParametros["usuario"];
+       $vehiculo = $ArrayDeParametros["vehiculo"];
+       Usuario::Relacionar($usuario,$vehiculo);
+       $objDelaRespuesta->respuesta= $ArrayDeParametros;
        return $response->withJson($objDelaRespuesta, 200);
    }
    public function TraerUno($request, $response, $args) 
@@ -115,10 +136,14 @@ class UsuarioApi extends Usuario
         $legajo = $ArrayDeParametros["Legajo"];
         
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios SET habilitado=false WHERE Legajo = :legajo");
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios2 SET estado=3 WHERE Legajo = :legajo");
         $consulta->bindParam(':legajo',$legajo);
         $consulta->execute();	
         
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE horarios SET estado=2 WHERE idremisero = :legajo");
+        $consulta->bindParam(':legajo',$legajo);
+        $consulta->execute();
+
         $objDelaRespuesta->respuesta="Empleado suspendido éxitosamente.";
         return $response->withJson($objDelaRespuesta, 200);
    }
@@ -130,12 +155,43 @@ class UsuarioApi extends Usuario
         $legajo = $ArrayDeParametros["Legajo"];
         
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios SET habilitado=true WHERE Legajo = :legajo");
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios2 SET estado=2 WHERE Legajo = :legajo");
+        $consulta->bindParam(':legajo',$legajo);
+        $consulta->execute();	
+        
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE horarios SET estado=1 WHERE idremisero = :legajo");
+        $consulta->bindParam(':legajo',$legajo);
+        $consulta->execute();
+
+        $objDelaRespuesta->respuesta="Empleado reabilitado éxitosamente.";
+        return $response->withJson($objDelaRespuesta, 200);
+   }
+   public function ContratarUsuario($request, $response, $args)
+   {
+        $objDelaRespuesta= new stdclass();
+        
+        $ArrayDeParametros = $request->getParsedBody();
+        $legajo = $ArrayDeParametros["Legajo"];
+        
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE usuarios2 SET estado=2 WHERE Legajo = :legajo");
         $consulta->bindParam(':legajo',$legajo);
         $consulta->execute();	
         
         $objDelaRespuesta->respuesta="Empleado reabilitado éxitosamente.";
         return $response->withJson($objDelaRespuesta, 200);
+   }
+
+   public function ObtenerRuta($request, $response, $args)
+   {
+        $objDelaRespuesta= new stdclass();
+        
+        $ArrayDeParametros = $request->getParsedBody();
+        $url = $ArrayDeParametros["ruta"];
+        
+        $xml = file_get_contents($url);	
+        
+        return $xml;
    }
 }
 ?>

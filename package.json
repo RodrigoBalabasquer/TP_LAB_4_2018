@@ -26,8 +26,10 @@
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.4",
     "font-awesome": "^4.7.0",
+    "ng-recaptcha": "^3.0.5",
     "ngx-file-drop": "^4.0.4",
     "rxjs": "^6.0.0",
+    "rxjs-compat": "^6.2.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

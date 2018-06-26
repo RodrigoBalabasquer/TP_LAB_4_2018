@@ -2,8 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Validators, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UsuariosService } from '../../servicios/usuarios.service';
+import { VehiculosService } from '../../servicios/vehiculos.service';
 import { VerificarService } from '../../servicios/verificar.service';
 import { Usuario } from '../../clases/usuario';
+import { Vehiculo } from '../../clases/vehiculo';
+import { UploadEvent, UploadFile } from 'ngx-file-drop';
+import { FileSystemFileEntry, FileSystemEntryMetadata, FileSystemEntry, FileSystemDirectoryEntry } from '../../file-Drop/dom.types';
+
 function copiaClave(input: FormControl) {
 
   if (input.root.get('clave') == null) {
@@ -21,9 +26,41 @@ function copiaClave(input: FormControl) {
 export class RegistroComponent implements OnInit {
 
   public miUsuario: Usuario;
+  public miVehiculo: Vehiculo;
   miServicioUsuario: UsuariosService;
+  miServicioVehiculo: VehiculosService;
   miServicioVerificacion: VerificarService
   claveCopia: string;
+  tipo = "2";
+  HasDrive: false;
+  tipoUsuario = "Cliente";
+  resolved: boolean = false;
+  public files: UploadFile[] = [];
+  public file: File;
+  public nombreFoto1: string = "";
+  public file2: File;
+  public nombreFoto2: string = "";
+
+  public gif = false;
+  resolvedCaptcha(result) {
+    this.resolved = true;
+  }
+
+  marca = new FormControl('', [
+    Validators.required,
+    Validators.minLength(5)
+  ]);
+
+  modelo = new FormControl('', [
+    Validators.required,
+    Validators.minLength(5)
+  ]);
+
+  patente = new FormControl('', [
+    Validators.required,
+    Validators.minLength(5)
+  ]);
+
 
   usuario = new FormControl('', [
     Validators.required,
@@ -70,28 +107,119 @@ export class RegistroComponent implements OnInit {
     sexo: this.sexo,
     nacimiento: this.nacimiento
   });
+  /*registroForm2: FormGroup = this.builder.group({
+    usuario: this.usuario,
+    nombre: this.nombre,
+    apellido: this.apellido,
+    clave: this.clave,
+    copiaClave: this.copiaClave,
+    sexo: this.sexo,
+    nacimiento: this.nacimiento,
+    patente: this.patente,
+    marca: this.marca,
+    modelo: this.modelo
+  });*/
+  ultimoUsuario: number = 0;
+  ultimoVehiculo: number = 0;
 
-  constructor(private router: Router, private builder: FormBuilder, ServicioUsuario: UsuariosService, VerificarService: VerificarService) {
+  constructor(private router: Router, private builder: FormBuilder, ServicioUsuario: UsuariosService, ServicioVehiculo: VehiculosService, VerificarService: VerificarService) {
     this.miUsuario = new Usuario(null, null, null, null, null, null, null, null, null, null);
+    this.miVehiculo = new Vehiculo(null, null, null, null, null, null,null);
     this.miServicioUsuario = ServicioUsuario;
+    this.miServicioVehiculo = ServicioVehiculo;
     this.miServicioVerificacion = VerificarService;
   }
 
   ngOnInit() {
   }
+  cambiarTipo() {
+    if (this.tipo == "2")
+      this.tipoUsuario = "Cliente";
+    if (this.tipo == "3")
+      this.tipoUsuario = "Remisero";
+    this.resolved = false;
+  }
+  cambiarValidacion() {
+    this.resolved = false;
+    if (this.HasDrive) {
+      this.registroForm = this.builder.group({
+        usuario: this.usuario,
+        nombre: this.nombre,
+        apellido: this.apellido,
+        clave: this.clave,
+        copiaClave: this.copiaClave,
+        sexo: this.sexo,
+        nacimiento: this.nacimiento,
+        patente: this.patente,
+        marca: this.marca,
+        modelo: this.modelo
+      });
+    }
+    else {
+      this.registroForm = this.builder.group({
+        usuario: this.usuario,
+        nombre: this.nombre,
+        apellido: this.apellido,
+        clave: this.clave,
+        copiaClave: this.copiaClave,
+        sexo: this.sexo,
+        nacimiento: this.nacimiento
+      });
+    }
+  }
   cancelar() {
     this.router.navigate(['/Login']);
   }
   Registrar() {
-    this.miServicioUsuario.RegistrarCliente(this.miUsuario)
-      .then((datos) => {
-        if (datos == true) {
-          this.registrarUsuario();
-        }
-      })
-      .catch(
-      (noSeEncontroUsuario) => { alert("Error en el sistema"); }
-      );
+    if (this.tipo == "2") {
+      this.miServicioUsuario.RegistrarCliente(this.miUsuario, this.file)
+        .then((datos) => {
+          if (datos == true) {
+            this.registrarUsuario();
+          }
+        })
+        .catch(
+        (noSeEncontroUsuario) => { alert("Error en el sistema"); }
+        );
+    }
+    if (this.tipo == "3") {
+      if (this.HasDrive) {
+        this.miServicioUsuario.RegistrarRemisero(this.miUsuario, this.file)
+          .then((datos) => {
+            this.ultimoUsuario = datos;
+            this.miVehiculo.dueño = 1;
+            this.miServicioVehiculo.RegistrarVehiculo(this.miVehiculo, this.file2).then(
+              (datos) => {
+                this.ultimoVehiculo = datos;
+                this.miServicioUsuario.RegistrarRemiseroConVehiculo(this.ultimoUsuario, this.ultimoVehiculo).then(
+                  (datos) => {
+                    this.registrarUsuario();
+                  }
+                )
+                .catch(
+                  (noSeEncontroUsuario) => { alert("Error en el sistema"); }
+                );
+              }
+            ).catch(
+              (noSeEncontroVehiculo) => { alert("Error en el sistema"); }
+              );
+            this.registrarUsuario();
+          })
+          .catch(
+          (noSeEncontroUsuario) => { alert("Error en el sistema"); }
+          );
+      }
+      else {
+        this.miServicioUsuario.RegistrarRemisero(this.miUsuario, this.file)
+          .then((datos) => {
+            this.registrarUsuario();
+          })
+          .catch(
+          (noSeEncontroUsuario) => { alert("Error en el sistema"); }
+          );
+      }
+    }
+
   }
   registrarUsuario() {
     this.miServicioUsuario.BuscarUsuario(this.miUsuario.usuario, this.miUsuario.contrasenia)
@@ -113,5 +241,45 @@ export class RegistroComponent implements OnInit {
       if (datos == true)
         this.router.navigate(['/Principal']);
     })
+  }
+  public dropped(event: UploadEvent) {
+    this.gif = true;
+    this.files = event.files;
+    if (this.files[0].fileEntry.isFile) {
+      const fileEntry = this.files[0].fileEntry as FileSystemFileEntry;
+
+      fileEntry.file((file: File) => {
+        this.nombreFoto1 = file.name;
+        this.gif = false;
+        this.file = file;
+      });
+    }
+    else {
+      alert("asadasdasd");
+    }
+  }
+  public dropped2(event: UploadEvent) {
+    this.gif = true;
+    this.files = event.files;
+    if (this.files[0].fileEntry.isFile) {
+      const fileEntry = this.files[0].fileEntry as FileSystemFileEntry;
+
+      fileEntry.file((file: File) => {
+        this.nombreFoto2 = file.name;
+        this.gif = false;
+        this.file2 = file;
+      });
+    }
+    else {
+      alert("asadasdasd");
+    }
+  }
+
+  public fileOver(event) {
+    console.log(event);
+  }
+
+  public fileLeave(event) {
+    console.log(event);
   }
 }

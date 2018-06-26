@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,67 +19,49 @@ export class HttpService {
     .then( this.extractData )
     .catch( this.manejadorError );
   }
-  private extractData ( res: any )
+  public httpGetRuta(direccionDesde,direccionHasta)
+  {   
+    const formData = new FormData()
+    formData.append('ruta',"https://maps.googleapis.com/maps/api/directions/json?origin="+direccionDesde+"&destination="+direccionHasta+"&key=AIzaSyA3KKoeuXANsYY9u67GSzA6IxJEJG7OFjg");
+    let headers = new HttpHeaders();
+    headers.append('Content-Type','application/json');
+    //return this.http.get("https://maps.googleapis.com/maps/api/directions/json?origin=Toledo&destination=Madrid&region=es&key=AIzaSyA3KKoeuXANsYY9u67GSzA6IxJEJG7OFjg")
+    return this.http
+    .post(this.URl+"ruta",formData,{headers})
+    .toPromise()
+    .then( this.extractData )
+    .catch( this.manejadorError );
+  }
+  private extractData ( res: any ):any
   { 
-    return res.results[0].geometry.location;
+    var obj = {
+        origin:{
+          lat: res.routes[0].legs[0].start_location.lat,
+          lng: res.routes[0].legs[0].start_location.lng
+        },
+        destination:
+        {
+          lat: res.routes[0].legs[0].end_location.lat,
+          lng: res.routes[0].legs[0].end_location.lng
+        },
+        duration:{
+          value: res.routes[0].legs[0].duration.value/60
+        },
+        distance:{
+          value: res.routes[0].legs[0].distance.value
+        }
+    };
+    return obj;
   }
   extraerDatos(respuesta) {
     return respuesta || { };
   }
-
   manejadorError(error: Response | any) {
-    //return error;
     console.error(error.message || error);
     return Promise.reject(error.message || error);
   }
-
   dameTodasLasPromesas(url:string){
-    
-    return this.http.get(this.URl+url).toPromise().then(this.extraerDatos).catch(this.manejadorError);
-
-  }
-
-  buscarUsuario(url:string,usuario:string,clave:string)
-  { 
-    const formData = new FormData()
-    formData.append('usuario',usuario);
-    formData.append('contrasenia',clave);
-    //var param = {usuario:usuario,contrasenia:clave};
-    //var paramString = JSON.stringify(param);
-    let header = new HttpHeaders();
-    header.append('Content-Type','application/json');
-    //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
-    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
-  }
-  entregarUsuario(user:any)
-  {
-    //var param = {usuario:player.usuario,nombre:player.nombre,apellido:player.apellido,contrasenia:player.contrasenia,email:player.email};
-    //var paramString = JSON.stringify(param);
-    const formData = new FormData()
-    formData.append('usuario',user.usuario);
-    formData.append('apellido',user.apellido);
-    formData.append('nombre',user.nombre);
-    formData.append('sexo',user.sexo);
-    formData.append('contrasenia',user.contrasenia);
-    formData.append('tipo',user.tipo);
-    formData.append('foto',user.foto);
-    formData.append('fechaDeNacimiento',user.fechaNacimiento);
-
-    let header = new HttpHeaders();
-    header.append('Content-Type','application/json');
-    
-    return this.http.post(this.URl,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
-  }
-  entregarVehiculo(vehiculo:any,file:any,url:string)
-  { 
-    const formData = new FormData()
-    formData.append('marca',vehiculo.marca);
-    formData.append('patente',vehiculo.patente);
-    formData.append('modelo',vehiculo.modelo);
-    formData.append('foto',file);
-    let header = new HttpHeaders();
-    header.append('Content-Type','application/json');
-    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+      return this.http.get(this.URl+url).toPromise().then(this.extraerDatos).catch(this.manejadorError);
   }
   crearToken(url:string,datos:any)
   { 
@@ -88,7 +72,7 @@ export class HttpService {
     formData.append('tipo',datos.tipo);
     formData.append('fechaNacimiento',datos.fechaNacimiento);
     formData.append('legajo',datos.legajo)
-    formData.append('habilitado',datos.habilitado);
+    formData.append('habilitado',datos.estado);
     formData.append('foto',datos.foto);
     //var param = {usuario:datos.nombre,clave:datos.contrasenia};
     //var paramString = JSON.stringify(param);
@@ -116,6 +100,54 @@ export class HttpService {
     header.append('Content-Type', 'application/json');
     return this.http.post(this.URl+url, formData,{headers: header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
   }
+  //USUARIOS
+  buscarRemisero(url:string,legajo:string)
+  { 
+    const formData = new FormData()
+    formData.append('legajo',legajo);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  buscarUsuario(url:string,usuario:string,clave:string)
+  { 
+    const formData = new FormData()
+    formData.append('usuario',usuario);
+    formData.append('contrasenia',clave);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  entregarUsuario(user:any,file:any)
+  {
+    //var param = {usuario:player.usuario,nombre:player.nombre,apellido:player.apellido,contrasenia:player.contrasenia,email:player.email};
+    //var paramString = JSON.stringify(param);
+    const formData = new FormData()
+    formData.append('usuario',user.usuario);
+    formData.append('apellido',user.apellido);
+    formData.append('nombre',user.nombre);
+    formData.append('sexo',user.sexo);
+    formData.append('contrasenia',user.contrasenia);
+    formData.append('tipo',user.tipo);
+    formData.append('estado',user.estado);
+    formData.append('foto',file);
+    formData.append('fechaDeNacimiento',user.fechaNacimiento);
+
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    
+    return this.http.post(this.URl,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  entregarUsuarioVehiculo(usuarioId:any,vehiculoId:any,url:string)
+  { 
+    const formData = new FormData()
+    formData.append('usuario',usuarioId);
+    formData.append('vehiculo',vehiculoId);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
   habilitarEmpleado(url:string,legajo:string)
   {
     const formData = new FormData()
@@ -131,5 +163,162 @@ export class HttpService {
     let header = new HttpHeaders()
     header.append('Content-Type', 'application/json');
     return this.http.post(this.URl+url, formData,{headers: header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  ContratarEmpleado(url:string,legajo:string)
+  {
+    const formData = new FormData()
+    formData.append('Legajo',legajo);
+    let header = new HttpHeaders()
+    header.append('Content-Type', 'application/json');
+    return this.http.post(this.URl+url, formData,{headers: header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  //VEHICULOS
+  entregarVehiculo(vehiculo:any,file:any,url:string)
+  { 
+    const formData = new FormData()
+    formData.append('marca',vehiculo.marca);
+    formData.append('patente',vehiculo.patente);
+    formData.append('modelo',vehiculo.modelo);
+    formData.append('dueño',vehiculo.dueño)
+    formData.append('foto',file);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  habilitarVehiculo(url:string,legajo:string)
+  {
+    const formData = new FormData()
+    formData.append('id',legajo);
+    let header = new HttpHeaders()
+    header.append('Content-Type', 'application/json');
+    return this.http.post(this.URl+url, formData,{headers: header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  desabilitarVehiculo(url:string,legajo:string)
+  {
+    const formData = new FormData()
+    formData.append('id',legajo);
+    let header = new HttpHeaders()
+    header.append('Content-Type', 'application/json');
+    return this.http.post(this.URl+url, formData,{headers: header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+
+  //HORARIOS
+  buscarHorario(url:string,legajo:string)
+  { 
+    const formData = new FormData()
+    formData.append('legajo',legajo);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  buscarHorarioViaje(url:string,horario:string)
+  { 
+    const formData = new FormData()
+    formData.append('horario',horario);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  entregarHorario(horario:any,url:string)
+  { 
+    const formData = new FormData()
+    formData.append('id',horario.id == null ? "":horario.id);
+    formData.append('remisero',horario.remisero.legajo);
+    formData.append('vehiculo',horario.vehiculo.id);
+    formData.append('timeDesde',horario.timeDesde);
+    formData.append('timeHasta',horario.timeHasta);
+ 
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  VerificarHorario(url:string,legajo:any,idVehiculo:any,desde:any,hasta:any)
+  {
+    const formData = new FormData()
+    formData.append('desde',desde);
+    formData.append('hasta',hasta);
+    formData.append('vehiculo',idVehiculo);
+    formData.append('remisero',legajo);
+    //var param = {usuario:usuario,contrasenia:clave};
+    //var paramString = JSON.stringify(param);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+
+  //VIAJES
+  entregarViaje(url:string,viaje: any)
+  { 
+    const formData = new FormData()
+    formData.append('latDesde',viaje.latDesde);
+    formData.append('lngDesde',viaje.lngDesde);
+    formData.append('latHasta',viaje.latHasta);
+    formData.append('lngHasta',viaje.lngHasta);
+    formData.append('cliente',viaje.legajoCliente);
+    formData.append('comodidad',viaje.comodidad);
+    formData.append('medioPago',viaje.medioDePago);
+    formData.append('duracion',viaje.duracion);
+    formData.append('distancia',viaje.distancia);
+    formData.append('precio',viaje.precio);
+    formData.append('cantidad',viaje.cantidad)
+    formData.append('horario',viaje.horario);
+
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  actualizarViaje(url:string,viaje: any)
+  { 
+    const formData = new FormData()
+    formData.append('id',viaje.id);
+    formData.append('estado',viaje.estado);
+    formData.append('latDesde',viaje.latDesde);
+    formData.append('lngDesde',viaje.lngDesde);
+    formData.append('latHasta',viaje.latHasta);
+    formData.append('lngHasta',viaje.lngHasta);
+    formData.append('comodidad',viaje.comodidad);
+    formData.append('medioPago',viaje.medioDePago);
+    formData.append('duracion',viaje.duracion);
+    formData.append('distancia',viaje.distancia);
+    formData.append('precio',viaje.precio);
+    formData.append('cantidad',viaje.cantidad)
+    formData.append('horario',viaje.horario);
+
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  actualizarViaje2(url:string,viaje: any)
+  {   
+    debugger;
+    const formData = new FormData()
+    formData.append('id',viaje.id);
+    formData.append('estado',viaje.estado);
+    formData.append('remisero',viaje.remisero.legajo)
+    formData.append('vehiculo',viaje.vehiculo.id);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  dameTodasLasPromesasRemiseroViajes(url:string,legajo:any)
+  {
+    const formData = new FormData();
+    formData.append('cliente',legajo);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  dameTodasLasPromesasViajes(url:string)
+  {
+    const formData = new FormData();
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
   }
 }

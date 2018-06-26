@@ -7,6 +7,7 @@ class Vehiculos
   	public $modelo;
     public $foto;
     public $estado;
+    public $dueño;
     
     public static function TraerTodosLosVehiculos()
 	{
@@ -18,12 +19,13 @@ class Vehiculos
     public function InsertarVehiculoParametros()
     {
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into vehiculos(id, modelo,marca,patente,foto,estado)
-        values(null,:modelo,:marca,:patente,:foto,1)");
+        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into vehiculos(id, modelo,marca,patente,foto,estado,duenio)
+        values(null,:modelo,:marca,:patente,:foto,1,:duenio)");
         $consulta->bindValue(':modelo',$this->modelo);
         $consulta->bindValue(':marca',$this->marca);
         $consulta->bindValue(':patente',$this->patente);
         $consulta->bindValue(':foto', $this->foto);
+        $consulta->bindValue(':duenio', $this->dueño);
         $consulta->execute();		
         return $objetoAccesoDato->RetornarUltimoIdInsertado();
     }

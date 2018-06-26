@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { Usuario } from '../clases/usuario';
-
+import { Remisero } from '../clases/remisero';
+import { Vehiculo } from '../clases/vehiculo';
 
 @Injectable({
   providedIn: 'root'
@@ -9,15 +10,24 @@ import { Usuario } from '../clases/usuario';
 export class UsuariosService {
 
   constructor(public miHttp: HttpService) { }
-  public listarPersonaPromesa(): Promise<Array<Usuario>> {
-    let promesa: Promise<Array<Usuario>> = new Promise((resolve, reject) => {
+  public listarPersonaPromesa(): Promise<Array<Remisero>> {
+    let promesa: Promise<Array<Remisero>> = new Promise((resolve, reject) => {
       this.miHttp.dameTodasLasPromesas('')
         .then(datos => {
           console.log(datos);
-          let miArray: Array<Usuario> = new Array<Usuario>();
+          let miArray: Array<Remisero> = new Array<Remisero>();
+          let vehiculo: Vehiculo;
+          let remisero: Remisero;
           for (let unDato of datos) {
-            debugger;
-            miArray.push(new Usuario(unDato.Legajo, unDato.Usuario, unDato.Nombre, unDato.Apellido,unDato.contrasenia,unDato.tipo,unDato.foto,unDato.fechadeNacimiento,unDato.habilitado,unDato.sexo));                        
+            if(unDato.id != null)
+            {
+              vehiculo = new Vehiculo(unDato.idvehiculo,unDato.marca,unDato.modelo,unDato.patente,unDato.fotoVehiculo,unDato.estadoVehiculo,1);
+            }
+            else
+            {
+              vehiculo = new Vehiculo(null,null,null,null,null,null,null);
+            }
+            miArray.push(new Remisero(unDato.legajo, unDato.usuario, unDato.nombre, unDato.apellido,unDato.contrasenia,unDato.tipo,unDato.foto,unDato.fechaDeNacimiento,unDato.estado,unDato.sexo,vehiculo));                        
           }
           resolve(miArray);
         })
@@ -31,7 +41,7 @@ export class UsuariosService {
       this.miHttp.buscarUsuario("traer", usuario, clave)
         .then(datos => {
           if (datos.length > 0) {
-            let usuario = new Usuario(datos[0].Legajo, datos[0].Usuario, datos[0].Nombre, datos[0].Apellido, datos[0].contrasenia, datos[0].tipo, datos[0].foto, datos[0].fechadeNacimiento, datos[0].habilitado, datos[0].sexo)
+            let usuario = new Usuario(datos[0].legajo, datos[0].usuario, datos[0].nombre, datos[0].apellido, datos[0].contrasenia, datos[0].tipo, datos[0].foto, datos[0].fechadeNacimiento, datos[0].estado, datos[0].sexo)
             resolve(usuario);
           }
           else {
@@ -42,9 +52,10 @@ export class UsuariosService {
     });
     return promesa;
   }
-  RegistrarCliente(usuario: Usuario): Promise<boolean> {
+  RegistrarCliente(usuario: Usuario,file: any): Promise<boolean> {
     usuario.tipo = 2;
-    let result: Promise<boolean> = this.miHttp.entregarUsuario(usuario)
+    usuario.estado = 0; 
+    let result: Promise<boolean> = this.miHttp.entregarUsuario(usuario,file)
       .then(datos => {
         return true;
       })
@@ -54,11 +65,23 @@ export class UsuariosService {
       });
     return result;
   }
-  RegistrarRemisero(usuario: Usuario): Promise<boolean> {
+  RegistrarRemisero(usuario: Usuario,file: any): Promise<number> {
     usuario.tipo = 3;
-    let result: Promise<boolean> = this.miHttp.entregarUsuario(usuario)
+    usuario.estado = 1; 
+    let result: Promise<number> = this.miHttp.entregarUsuario(usuario,file)
       .then(datos => {
-        return true;
+        return datos.respuesta;
+      })
+      .catch(error => {
+        console.log(error);
+        return 0;
+      });
+    return result;
+  }
+  RegistrarRemiseroConVehiculo(idUsuario: number,idVehiculo: number): Promise<number> {
+    let result: Promise<number> = this.miHttp.entregarUsuarioVehiculo(idUsuario,idVehiculo,'UV')
+      .then(datos => {
+        return datos;
       })
       .catch(error => {
         console.log(error);
@@ -81,6 +104,19 @@ export class UsuariosService {
   Desabilitar(Legajo:string):Promise<boolean>
   {
     let result: Promise<boolean> = this.miHttp.desabilitarEmpleado('desabilitar',Legajo)
+      .then(datos => {
+        return true;
+      })
+      .catch(error => {
+        console.log(error);
+        return false;
+      });
+    return result;
+  }
+  Contratar(Legajo:string):Promise<boolean>
+  {
+    debugger;
+    let result: Promise<boolean> = this.miHttp.ContratarEmpleado('contratar',Legajo)
       .then(datos => {
         return true;
       })

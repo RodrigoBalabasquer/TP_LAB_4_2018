@@ -18,6 +18,11 @@ export class AbmVehiculosComponent implements OnInit {
   miServicioVerificacion: VerificarService;
   public miVehiculo: Vehiculo;
   public isvalid: boolean = false;
+  resolved: boolean = false;
+
+  resolvedCaptcha(result) {
+    this.resolved = true;
+  }
 
   public files: UploadFile[] = [];
   public file: File;
@@ -46,7 +51,7 @@ export class AbmVehiculosComponent implements OnInit {
   constructor(private router: Router, private builder: FormBuilder, VehiculosService: VehiculosService, VerificarService: VerificarService) {
     this.miServicioVehiculos = VehiculosService;
     this.miServicioVerificacion = VerificarService;
-    this.miVehiculo = new Vehiculo(null,null,null,null,null,null);
+    this.miVehiculo = new Vehiculo(null,null,null,null,null,null,null);
     this.llamaServicePromesa();
   }
   public llamaServicePromesa() {
@@ -61,16 +66,13 @@ export class AbmVehiculosComponent implements OnInit {
   }
   cancelar(){
     this.isvalid=false;
-    this.miVehiculo = new Vehiculo(null,null,null,null,null,null);
+    this.miVehiculo = new Vehiculo(null,null,null,null,null,null,null);
   }
   Registrar() {
     this.miServicioVehiculos.RegistrarVehiculo(this.miVehiculo,this.file)
       .then((datos) => {
-        if (datos == true) {
-          //this.registrarUsuario();
-          alert("Vehiculo registrado con éxito");
-          this.router.navigate(['/Principal']);
-        }
+        alert("Vehiculo registrado con éxito");
+        this.router.navigate(['/Principal']);
       })
       .catch(
       (noSeEncontroUsuario) => { alert("Error en el sistema"); }
@@ -99,5 +101,9 @@ export class AbmVehiculosComponent implements OnInit {
 
   public fileLeave(event) {
     console.log(event);
+  }
+  Actualizar(event: any)
+  {
+    this.llamaServicePromesa();
   }
 }

@@ -1,13 +1,13 @@
 <app-menu></app-menu>
 
-<app-listado-vehiculos [listaVehiculo]="listadoParaCompartir"></app-listado-vehiculos>
+<app-listado-vehiculos (cambio)="Actualizar($event)" [listaVehiculo]="listadoParaCompartir"></app-listado-vehiculos>
 
-<button class="btn btn-info" (click)="agregar()" style="width: 100%">Agregar Vehiculo</button>
+<button *ngIf="!isvalid" class="btn btn-info" (click)="agregar()" style="width: 100%">Agregar Vehiculo</button>
 
 <div *ngIf="isvalid">
   <form [formGroup]="registroForm" (ngSubmit)="Registrar()">
     <div class="form-group">
-      <h1>Datos de Empleados</h1><br>
+      <h1>Datos del Vehiculo</h1><br>
       <div class="form-group">
         <!--<img src="" id="fotoPrevia" class="img-thumbnail">-->
         <label>* Campos obligatorios</label>
@@ -41,11 +41,15 @@
           </div>
         </div>
         <br>
+        <div style="padding-left: 45%">
+          <re-captcha (resolved)="resolvedCaptcha($event)" siteKey="6LfpD18UAAAAAF5G961BFO14n0GnyW1GkubRzcU9"></re-captcha>
+        </div>
+        <br>
         <div class="row">
           <div class="col-lg-0 col-md-0 col-sm-0 col-xs-0">
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            <button type="submit" id="botonRegistro" class="btn btn-success" style="width: 100%" [disabled]="!registroForm.valid">Registrar</button>
+            <button type="submit" id="botonRegistro" class="btn btn-success" style="width: 100%" [disabled]="!(registroForm.valid && resolved)">Registrar</button>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <button class="btn btn-danger" style="width: 100%" (click)="cancelar()">Cancelar</button>

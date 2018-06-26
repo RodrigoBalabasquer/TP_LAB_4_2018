@@ -1,5 +1,6 @@
 import { Component, OnInit, Input,Output,EventEmitter } from '@angular/core';
 import { Usuario } from '../../clases/usuario';
+import { Remisero } from '../../clases/remisero';
 import { UsuariosService } from '../../servicios/usuarios.service';
 @Component({
   selector: 'app-listado-remiseros',
@@ -10,7 +11,7 @@ export class ListadoRemiserosComponent implements OnInit {
   @Output() cambio: EventEmitter<any>= new EventEmitter<any>();  
   @Input()
   
-  public listaUsuarios: Array<Usuario> = [];
+  public listaUsuarios: Array<Remisero> = [];
   public miUsuariosService: UsuariosService;
   constructor(UsuariosService: UsuariosService) {
     this.miUsuariosService = UsuariosService
@@ -18,6 +19,14 @@ export class ListadoRemiserosComponent implements OnInit {
 
   Habilitar(legajo: string) { 
     this.miUsuariosService.Habilitar(legajo).then((datos) =>{
+      if(datos)
+      {
+        this.cambio.emit();
+      }
+    })
+  }
+  Contratar(legajo: string) { 
+    this.miUsuariosService.Contratar(legajo).then((datos) =>{
       if(datos)
       {
         this.cambio.emit();

@@ -4,6 +4,9 @@
   <div class="hero">
     <h1 style="font-size:50px;text-align: center;color: darkred;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Remiseria Balabasquer</h1><br />
     <p style="font-size:25px;text-align: center;color: darkred;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Bienvenido señor/a {{usuario}}</p>
+    <div style="text-align: center">
+            <img src="{{foto}}" style="height: 300px;width: 300px">
+    </div>
   </div>
   <br>
 
@@ -35,7 +38,20 @@
       </a>
     </li>
     <li class="list-group-item list-group-item-info transparent-style">
-      <a routerLink="/Listado">
+      <a routerLink="/Horario">
+        <div class="media">
+          <!--<div class="media-left">
+            <img src="./assets/imagenes/listado.png" class="media-object imagenDeMenu">
+          </div>-->
+          <div class="media-body">
+            <h2 style="color: #F2E6E6;" class="media-heading">Gestor de Horario</h2>
+          </div>
+
+        </div>
+      </a>
+    </li>
+    <li class="list-group-item list-group-item-info transparent-style">
+      <a routerLink="/gestorViajes">
         <div class="media">
           <!--<div class="media-left">
             <img src="./assets/imagenes/listado.png" class="media-object imagenDeMenu">

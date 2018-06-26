@@ -4,7 +4,8 @@ export class Vehiculo {
     public modelo:string,
     public patente: string,
     public foto: string,
-    public estado: number        
+    public estado: number ,  
+    public dueño: number     
     ) { 
         this.id = id;
         this.marca = marca;
@@ -12,5 +13,6 @@ export class Vehiculo {
         this.patente = patente;
         this.foto = foto;
         this.estado = estado;
+        this.dueño = dueño;
     }
 }

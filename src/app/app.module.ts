@@ -14,9 +14,11 @@ import { AbmRemiserosComponent } from './componentes/abm-remiseros/abm-remiseros
 import { ListadoRemiserosComponent } from './componentes/listado-remiseros/listado-remiseros.component';
 import { AbmVehiculosComponent } from './componentes/abm-vehiculos/abm-vehiculos.component';
 import { ListadoVehiculosComponent } from './componentes/listado-vehiculos/listado-vehiculos.component';
+import { ExponentialStrengthPipe} from './exponential-strength.pipe';
 
 import { RouterModule, Routes } from '@angular/router';
 import { RuteoModule } from './ruteo/ruteo.module';
+import { RecaptchaModule, RECAPTCHA_SETTINGS, RecaptchaSettings} from 'ng-recaptcha';
 
 import {HttpService} from './servicios/http.service';
 import {UsuariosService} from './servicios/usuarios.service';
@@ -28,6 +30,11 @@ import {VerificarService} from './servicios/verificar.service';
 import { FileDropModule } from 'ngx-file-drop';
 import { AgmCoreModule } from '@agm/core';           
 import { AgmDirectionModule } from 'agm-direction';
+import { HorariosComponent } from './componentes/horarios/horarios.component';
+import { ListaViajesComponent } from './componentes/lista-viajes/lista-viajes.component';
+import { GestorViajesComponent } from './componentes/gestor-viajes/gestor-viajes.component';
+import { PreloadImagenComponent } from './componentes/preload-imagen/preload-imagen.component';
+import { EncuestaComponent } from './componentes/encuesta/encuesta.component';
 
 
 @NgModule({
@@ -42,7 +49,13 @@ import { AgmDirectionModule } from 'agm-direction';
     ListadoRemiserosComponent,
     AbmVehiculosComponent,
     ListadoVehiculosComponent,
-    ViajeComponent
+    ViajeComponent,
+    HorariosComponent,
+    ListaViajesComponent,
+    GestorViajesComponent,
+    PreloadImagenComponent,
+    ExponentialStrengthPipe,
+    EncuestaComponent
   ],
   imports: [
     BrowserModule,
@@ -54,9 +67,18 @@ import { AgmDirectionModule } from 'agm-direction';
     AgmCoreModule.forRoot({ 
       apiKey: 'AIzaSyA3KKoeuXANsYY9u67GSzA6IxJEJG7OFjg',
     }),
-    AgmDirectionModule
+    AgmDirectionModule,
+    RecaptchaModule.forRoot()
   ],
-  providers: [UsuariosService,VehiculosService,ViajesService,HttpService,VerificarService],
+  providers: [
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: {siteKey: '6LfpD18UAAAAAF5G961BFO14n0GnyW1GkubRzcU9'} as RecaptchaSettings, 
+    },
+    UsuariosService,
+    VehiculosService,
+    ViajesService,HttpService,
+    VerificarService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

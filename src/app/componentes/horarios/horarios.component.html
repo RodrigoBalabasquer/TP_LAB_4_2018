@@ -1,0 +1,80 @@
+<app-menu></app-menu>
+<div class="container">
+  <h1>Gestor de Horarios: </h1>
+
+  <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+      <label class="form-control">Legajo de remisero</label>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+      <input type="number" [(ngModel)]="legajo" class="form-control">
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+      <button class="btn btn-success" (click)="buscar()" style="width: 100%">Buscar Remisero</button>
+    </div>
+  </div>
+</div>
+
+<br><br>
+
+<div class="container">
+  <div *ngIf="formulario">
+    <h1>Datos del horario</h1>
+    <div class="row">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <label class="form-control">Horario de comienzo:</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <input type='time' [(ngModel)]="horario.timeDesde" class="form-control" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <label class="form-control">Horario de fin:</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <input type='time' [(ngModel)]="horario.timeHasta" class="form-control" />
+      </div>
+      <br>
+      <div *ngIf="formularioVehiculo">
+        <h1>Vehiculo elegido: {{patenteVehiculo}}</h1>
+        <h1>Lista de Vehiculos: </h1>
+        <table class='table table-hover table-responsive table-fixed'>
+          <thead>
+            <tr>
+              <th>Modelo</th>
+              <th>Marca</th>
+              <th>Patente</th>
+              <th>Estado</th>
+              <th>Foto</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let vehiculo of listaVehiculo">
+            <tr *ngIf="vehiculo.estado == 1" style="background-color: green">
+              <td>{{vehiculo.modelo}} </td>
+              <td>{{vehiculo.marca}} </td>
+              <td>{{vehiculo.patente}}</td>
+              <td>Disponible</td>
+              <td><img style="width:100px;height:100px" class='fotoGrilla' src="../../../assets/vehiculos/{{vehiculo.foto}}"
+                /></td>
+              <td><button class="btn btn-danger" (click)="elegir(vehiculo.id,vehiculo.patente)" style="width: 100%">Elegir</button></td>
+            </tr>
+            <tr *ngIf="vehiculo.estado == 2" style="background-color: orangered">
+              <td>{{vehiculo.modelo}} </td>
+              <td>{{vehiculo.marca}} </td>
+              <td>{{vehiculo.patente}}</td>
+              <td>No disponible</td>
+              <td><img style="width:100px;height:100px" class='fotoGrilla' src="../../../assets/vehiculos/{{vehiculo.foto}}"
+                /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <button class="btn btn-success" (click)="guardarHorario()" style="width: 100%">Actualizar Horario</button>
+  </div>
+</div>
