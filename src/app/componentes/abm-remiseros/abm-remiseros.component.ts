@@ -20,8 +20,10 @@ export class AbmRemiserosComponent implements OnInit {
   miServicioVerificacion: VerificarService
   claveCopia: string;
 
-  
-constructor(private router: Router, private builder: FormBuilder, ServicioUsuario: UsuariosService, VerificarService: VerificarService) {
+  gif = false;
+  repetidor: any;
+
+  constructor(private router: Router, private builder: FormBuilder, ServicioUsuario: UsuariosService, VerificarService: VerificarService) {
     this.miUsuario = new Usuario(null, null, null, null, null, null, null, null, null, null);
     this.miServicioUsuario = ServicioUsuario;
     this.miServicioVerificacion = VerificarService;
@@ -31,15 +33,20 @@ constructor(private router: Router, private builder: FormBuilder, ServicioUsuari
   ngOnInit() {
   }
   public llamaServicePromesa() {
+
     this.miServicioUsuario.listarPersonaPromesa().then(
       (listadoPromesa) => {
-      this.listadoParaCompartir = listadoPromesa;
+        this.listadoParaCompartir = listadoPromesa;
+        this.gif = false;
+        clearInterval(this.repetidor);
       }
     );
   }
-  Actualizar(event: any)
-  {
-    this.llamaServicePromesa();
+  Actualizar(event: any) {
+    this.gif = true;
+    this.repetidor = setInterval(() => {
+      this.llamaServicePromesa();
+    }, 3000);
   }
-  
+
 }

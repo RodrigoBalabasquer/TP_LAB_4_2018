@@ -9,8 +9,8 @@ class VehiculoApi extends Vehiculos
     }
     public function traerRemis($request, $response, $args) {
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT v.id, modelo, marca, patente, foto, estado, duenio FROM vehiculos AS V
-        LEFT JOIN usuariobyvehiculos AS UV ON UV.idvehiculo = v.id
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT V.id, modelo, marca, patente, foto, estado, duenio FROM vehiculos AS V
+        LEFT JOIN usuariobyvehiculos AS UV ON UV.idvehiculo = V.id
         WHERE duenio = 0");
         $consulta->execute();			
         $todosLosVehiculos = $consulta->fetchAll(PDO::FETCH_CLASS, "Vehiculos");		
@@ -29,8 +29,8 @@ class VehiculoApi extends Vehiculos
        $modelo = $ArrayDeParametros['modelo'];
        $dueño = $ArrayDeParametros['dueño'];
 
-       $destino="../../Remiseria/src/assets/vehiculos/";
-       //$destino="../../assets/vehiculos/";
+       //$destino="../../Remiseria/src/assets/vehiculos/";
+       $destino="../../assets/vehiculos/";
        $archivos = $request->getUploadedFiles();
        $nombreAnterior=$archivos['foto']->getClientFilename();
        $extension= explode(".", $nombreAnterior);

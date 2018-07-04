@@ -2,10 +2,17 @@
 require_once 'Viajes.php';
 class ViajesApi extends Viajes
 {
-    public function TraerViajesRemisero($request, $response, $args) {
+    public function TraerViajesCliente($request, $response, $args) {
         $ArrayDeParametros = $request->getParsedBody();
         $cliente = $ArrayDeParametros['cliente'];
-        $todosLosViajes=Viajes::todosLosViajesRemisero($cliente);
+        $todosLosViajes=Viajes::todosLosViajesCliente($cliente);
+        $newresponse = $response->withJson($todosLosViajes, 200);  
+        return $newresponse;
+    }
+    public function TraerViajesRemisero($request, $response, $args) {
+        $ArrayDeParametros = $request->getParsedBody();
+        $remisero = $ArrayDeParametros['remisero'];
+        $todosLosViajes=Viajes::todosLosViajesRemisero($remisero);
         $newresponse = $response->withJson($todosLosViajes, 200);  
         return $newresponse;
     }
@@ -126,6 +133,34 @@ class ViajesApi extends Viajes
         $consulta->execute();	
 
         $objDelaRespuesta->respuesta="viaje asignado correctamente";
+       return $response->withJson($objDelaRespuesta, 200);
+   }
+   public function TraerDatos($request, $response, $args){
+        $objDelaRespuesta= new stdclass();
+        
+        $ArrayDeParametros = $request->getParsedBody();
+        $mes = $ArrayDeParametros["mes"];
+        $mesHasta = (intval($mes)+1);
+        $anio = $ArrayDeParametros["anio"];
+
+        $desde = $anio.'-'.$mes.'-01';
+        $hasta = $anio.'-'.$mesHasta.'-01';
+
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT CONCAT(C.apellido,' ' , C.nombre) as Cliente, CONCAT(R.apellido,' ' , R.nombre) as Remisero,R.legajo as LegajoRemisero,
+        CONCAT(VH.marca,' ', VH.modelo) as Vehiculo,VH.patente as Patente
+        ,V.duracion as Duracion,V.distancia as Distancia,V.comodidad as Comodidad,V.precio as Precio ,V.cantidadPasajeros as Pasajeros,
+         V.medioDePago as MedioPago,V.estado as Estado, V.horario as Horario
+        FROM viajes as V 
+        LEFT JOIN usuarios2 as C ON  C.legajo = V.legajoCliente
+        LEFT JOIN usuarios2 as R ON  R.legajo = V.legajoRemisero
+        LEFT JOIN vehiculos as VH ON  VH.id = V.idVehiculo
+        WHERE V.horario >= '$desde' AND V.horario < '$hasta'
+        ORDER BY V.horario");
+        $consulta->execute();	
+
+        $datos = $consulta->fetchAll(PDO::FETCH_CLASS, "Viajes");
+        $objDelaRespuesta->respuesta= $datos;
        return $response->withJson($objDelaRespuesta, 200);
    }
 }

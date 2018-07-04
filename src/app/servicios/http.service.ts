@@ -8,8 +8,8 @@ import { Observable } from 'rxjs/Observable';
 })
 export class HttpService {
 
- URl = "http://localhost:8080/apirestTPFinal/apirestV6-JWT-MW-POO/remiseria/";
- //URl = "http://rodrigobalabasquer.esy.es/apirestTPFinal/apirestV6-JWT-MW-POO/remiseria/";
+ //URl = "http://localhost:8080/apirestTPFinal/apirestV6-JWT-MW-POO/remiseria/";
+ URl = "http://rodrigobalabasquer.esy.es/apirestTPFinal/apirestV6-JWT-MW-POO/remiseria/";
   constructor(public http: HttpClient) { }
   public httpGetP ( direccion: string)
   { 
@@ -249,7 +249,25 @@ export class HttpService {
     //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
     return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
   }
+  //ENCUESTA
+  entregarEncuesta(encuesta:any,url:string)
+  { 
+    const formData = new FormData()
+    formData.append('pregunta1',encuesta.pregunta1);
+    formData.append('pregunta2',encuesta.pregunta2);
+    formData.append('pregunta3',encuesta.pregunta3);
+    formData.append('pregunta4',encuesta.pregunta4);
+    formData.append('pregunta5',encuesta.pregunta5);
+    formData.append('pregunta6',encuesta.pregunta6);
+    formData.append('pregunta7',encuesta.pregunta7);
+    formData.append('pregunta8',encuesta.pregunta8);
+    formData.append('idCliente',encuesta.idCliente);
 
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
   //VIAJES
   entregarViaje(url:string,viaje: any)
   { 
@@ -294,7 +312,6 @@ export class HttpService {
   }
   actualizarViaje2(url:string,viaje: any)
   {   
-    debugger;
     const formData = new FormData()
     formData.append('id',viaje.id);
     formData.append('estado',viaje.estado);
@@ -304,7 +321,7 @@ export class HttpService {
     header.append('Content-Type','application/json');
     return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
   }
-  dameTodasLasPromesasRemiseroViajes(url:string,legajo:any)
+  dameTodasLasPromesasClienteViajes(url:string,legajo:any)
   {
     const formData = new FormData();
     formData.append('cliente',legajo);
@@ -313,9 +330,27 @@ export class HttpService {
     //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
     return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
   }
+  dameTodasLasPromesasRemiseroViajes(url:string,legajo:any)
+  {
+    const formData = new FormData();
+    formData.append('remisero',legajo);
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
   dameTodasLasPromesasViajes(url:string)
   {
     const formData = new FormData();
+    let header = new HttpHeaders();
+    header.append('Content-Type','application/json');
+    //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);
+    return this.http.post(this.URl+url,formData,{headers:header}).toPromise().then(this.extraerDatos).catch(this.manejadorError);
+  }
+  traerDatos(url:string,mes,anio){
+    const formData = new FormData();
+    formData.append('mes',mes);
+    formData.append('anio',anio);
     let header = new HttpHeaders();
     header.append('Content-Type','application/json');
     //return this.http.post(url,paramString).toPromise().then(this.extractData).catch(this.handleError);

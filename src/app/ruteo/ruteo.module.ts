@@ -14,6 +14,8 @@ import {ListaViajesComponent} from '../componentes/lista-viajes/lista-viajes.com
 import {GestorViajesComponent} from '../componentes/gestor-viajes/gestor-viajes.component';
 import {ViajeComponent} from '../componentes/viaje/viaje.component';
 import {EncuestaComponent} from '../componentes/encuesta/encuesta.component';
+import {GraficosComponent} from '../componentes/graficos/graficos.component';
+import {InformesComponent} from '../componentes/informes/informes.component';
 
 import {VerificarService} from '../servicios/verificar.service';
 
@@ -34,6 +36,8 @@ const MiRuteo = [
 {path: 'listaViajes' , component: ListaViajesComponent,canActivate: [VerificarService],},
 {path: 'gestorViajes' , component: GestorViajesComponent,canActivate: [VerificarService],},
 {path: 'Encuesta' , component: EncuestaComponent,canActivate: [VerificarService],},
+{path: 'Graficos', component: GraficosComponent,canActivate: [VerificarService],},
+{path: 'Informes', component: InformesComponent,canActivate: [VerificarService],},
 {path: 'Registro' , component: RegistroComponent},
 {path: '**' , component: ErrorComponent},
 {path: 'error' , component: ErrorComponent}]

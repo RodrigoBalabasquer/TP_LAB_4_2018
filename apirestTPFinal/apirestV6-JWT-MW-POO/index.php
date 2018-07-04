@@ -11,6 +11,7 @@ require_once 'clases/UsuarioApi.php';
 require_once 'clases/VehiculosApi.php';
 require_once 'clases/HorarioApi.php';
 require_once 'clases/ViajesApi.php';
+require_once 'clases/EncuestaApi.php';
 require_once 'clases/AutentificadorJWT.php';
 require_once 'clases/MWparaCORS.php';
 //require_once 'clases/MWparaAutentificar.php';
@@ -94,6 +95,9 @@ $app->group('/remiseria', function () {
      $this->post('/VerificarToken', \UsuarioApi::class . ':VerificarToken')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
      $this->post('/RecuperarToken', \UsuarioApi::class . ':RecuperarToken')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
+     $this->post('/guardarEncuesta', \EncuestaApi::class . ':guardarEncuesta')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+     $this->get('/encuestas', \EncuestaApi::class . ':traerEncuestas')->add(\MWparaCORS::class . ':HabilitarCORS8080');
+
      $this->post('/guardarHorario', \HorarioApi::class . ':GuardarHorario')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
      $this->post('/BuscarRemisero', \HorarioApi::class . ':BuscarRemisero')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
      $this->post('/BuscarHorario', \HorarioApi::class . ':BuscarHorario')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
@@ -101,10 +105,12 @@ $app->group('/remiseria', function () {
      $this->post('/VerificarHorario', \HorarioApi::class . ':VerificarHorario')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
     
      $this->post('/CargarViaje', \ViajesApi::class . ':CargarViaje')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+     $this->post('/TraerViajesCliente', \ViajesApi::class . ':TraerViajesCliente')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
      $this->post('/TraerViajesRemisero', \ViajesApi::class . ':TraerViajesRemisero')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
      $this->post('/TraerViajes', \ViajesApi::class . ':TraerViajes')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
      $this->post('/ActualizarViaje', \ViajesApi::class . ':ActualizarViaje')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
      $this->post('/ActualizarViaje2', \ViajesApi::class . ':ActualizarViaje2')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+     $this->post('/TraerDatos', \ViajesApi::class . ':TraerDatos')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
     /*$this->get('/{id}', \PersonaApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORS8080');
  
     

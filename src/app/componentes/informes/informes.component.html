@@ -1,0 +1,68 @@
+<app-menu></app-menu>
+
+<div class="container">
+  <h1>Informes: </h1>
+  <div class="row">
+    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-8">
+      <label class="form-control">Ingrese Mes:</label>
+    </div>
+    <div class="col-lg-10 col-md-9 col-sm-9 col-xs-4">
+      <input type="number" [(ngModel)]="mes" min="1" max="12" class="form-control">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-8">
+      <label class="form-control">Ingrese Año: </label>
+    </div>
+    <div class="col-lg-10 col-md-9 col-sm-9 col-xs-4">
+      <input type="number" [(ngModel)]="anio" min="2017" max="2018" class="form-control">
+    </div>
+  </div>
+  <div style="text-align: center">
+    <button class="btn btn-success" (click)="buscar()" [disabled]="(mes > 12 || mes < 1) || (anio > 2018 || anio < 2017)" style="width: 100%">Buscar Viajes</button>
+  </div>
+</div>
+<div *ngIf="mostrar" style="background-color: snow">
+  <h1>Lista de Vehiculos: </h1>
+  <table class='table table-hover table-responsive table-fixed'>
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Horario</th>
+        <th>Precio</th>
+        <th>Medio de pago</th>
+        <th>Distancia</th>
+        <th>Duracion</th>
+        <th>Cantidad de Pasajeros</th>
+        <th>Estado</th>
+        <th>Mensaje</th>
+        <th>Remisero</th>
+        <th>Vehiculo</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let dato of listaDeDatos">
+      <tr>
+        <td>{{dato.Cliente}} </td>
+        <td>{{dato.Horario}} </td>
+        <td>{{dato.Precio}}</td>
+        <td>{{dato.MedioPago}}</td>
+        <td>{{dato.Distancia}}</td>
+        <td>{{dato.Duracion}}</td>
+        <td>{{dato.Pasajeros}}</td>
+        <td>{{dato.Estado}}</td>
+        <td>{{dato.Mensaje}}</td>
+        <td>{{dato.Remisero}}</td>
+        <td>{{dato.Vehiculo}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="text-align: center">
+    <button class="btn btn-success" (click)="ExportarCSV()" style="width: 100%">Exportar Excel</button>
+  </div>
+</div>
+
+
+
+<div *ngIf="gif">
+  <app-preload-imagen></app-preload-imagen>
+</div>

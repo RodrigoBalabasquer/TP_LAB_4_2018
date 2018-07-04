@@ -4,6 +4,10 @@
 
 <button *ngIf="!isvalid" class="btn btn-info" (click)="agregar()" style="width: 100%">Agregar Vehiculo</button>
 
+<div *ngIf="gif2"> 
+<app-preload-imagen ></app-preload-imagen>
+</div>
+
 <div *ngIf="isvalid">
   <form [formGroup]="registroForm" (ngSubmit)="Registrar()">
     <div class="form-group">
@@ -23,9 +27,12 @@
         <br>
         <div class="center">
           <file-drop (onFileDrop)="dropped($event)" (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
-            <span>Arrastre aquí la foto de su vehiculo</span>
+            <span *ngIf="!gif" >Arrastre aquí la foto de su vehiculo: {{nombreFoto1}}</span>
+                  <div *ngIf="gif" style="text-align: center"> 
+                  <img src="../../../assets/fotos/loading.gif">
+                  </div>
           </file-drop>
-          <div class="upload-table">
+          <!--<div class="upload-table">
             <table class="table">
               <thead>
                 <tr>
@@ -38,10 +45,10 @@
                 </tr>
               </tbody>
             </table>
-          </div>
+          </div>-->
         </div>
         <br>
-        <div style="padding-left: 45%">
+        <div class="captcha">
           <re-captcha (resolved)="resolvedCaptcha($event)" siteKey="6LfpD18UAAAAAF5G961BFO14n0GnyW1GkubRzcU9"></re-captcha>
         </div>
         <br>

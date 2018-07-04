@@ -39,12 +39,21 @@ class Viajes
         $consulta->execute();		
         return $objetoAccesoDato->RetornarUltimoIdInsertado();
     }
-    public static function todosLosViajesRemisero($legajo)
+    public static function todosLosViajesCliente($legajo)
     {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT *
             FROM viajes  
             WHERE legajoCliente = '$legajo'");
+            $consulta->execute();			
+			return $consulta->fetchAll(PDO::FETCH_CLASS, "Viajes");		
+    }
+    public static function todosLosViajesRemisero($legajo)
+    {
+			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT *
+            FROM viajes  
+            WHERE legajoRemisero = '$legajo'");
             $consulta->execute();			
 			return $consulta->fetchAll(PDO::FETCH_CLASS, "Viajes");		
     }

@@ -31,7 +31,6 @@ export class ViajesService {
     return result;
   }
   ActualizarViaje2(vehiculo: Viaje): Promise<any> {
-    debugger;
     let result: Promise<any> = this.miHttp.actualizarViaje2('ActualizarViaje2', vehiculo)
       .then(datos => {
         return datos.respuesta;
@@ -41,6 +40,25 @@ export class ViajesService {
         return false;
       });
     return result;
+  }
+  listarViajesClientePromesa(legajo): Promise<Array<Viaje>> {
+    let promesa: Promise<Array<Viaje>> = new Promise((resolve, reject) => {
+      this.miHttp.dameTodasLasPromesasClienteViajes('TraerViajesCliente', legajo)
+        .then(datos => {
+          console.log(datos);
+          let miArray: Array<Viaje> = new Array<Viaje>();
+          for (let unDato of datos) {
+            let viaje = new Viaje(unDato.id, unDato.legajoRemisero, unDato.idVehiculo,
+              unDato.legajoCliente, unDato.latDesde, unDato.latHasta, unDato.lngDesde, unDato.lngHasta,
+              unDato.duracion, unDato.distancia, unDato.precio, unDato.cantidadPasajeros, unDato.comodidad, unDato.medioDePago, unDato.estado, unDato.horario);
+            miArray.push(viaje);
+          }
+          resolve(miArray);
+        })
+        .catch(error => { console.log(error); });
+    }
+    );
+    return promesa;
   }
   listarViajesRemiseroPromesa(legajo): Promise<Array<Viaje>> {
     let promesa: Promise<Array<Viaje>> = new Promise((resolve, reject) => {
@@ -74,6 +92,18 @@ export class ViajesService {
             miArray.push(viaje);
           }
           resolve(miArray);
+        })
+        .catch(error => { console.log(error); });
+    }
+    );
+    return promesa;
+  }
+  traerInformes(mes:number,anio:number): Promise<Array<any>> 
+  {
+    let promesa: Promise<Array<any>> = new Promise((resolve, reject) => {
+      this.miHttp.traerDatos('TraerDatos',mes,anio)
+        .then(datos => {
+          resolve(datos.respuesta);
         })
         .catch(error => { console.log(error); });
     }

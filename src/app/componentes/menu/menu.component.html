@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse">
+<nav *ngIf="TIPO==1" class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -9,17 +9,59 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
-                <!--<li><a  (click)="Juego('Adivina')">Adivina</a></li>
-                <li><a  (click)="Juego('Agilidad')">Agilidad</a></li>
-                <li><a  (click)="Juego('Anagrama')">Anagrama</a></li>
-                <li><a  (click)="Juego('PPT')">Piedra,Papel,Tijeras</a></li>
-                <li><a  (click)="Juego('Visual')">Agilidad Visual</a></li>
-                <li><a  (click)="Juego('AdivinaMasListado')">Adivina+listado</a></li>
-                <li><a  (click)="Juego('AgilidadaMasListado')">Agilidad+listado</a></li>-->
+                <li><a  (click)="IR('Remiseros')">Remiseros</a></li>
+                <li><a  (click)="IR('Vehiculos')">Vehiculos</a></li>
+                <li><a  (click)="IR('Horario')">Horarios</a></li>
+                <li><a  (click)="IR('gestorViajes')">Viajes</a></li>
+                <li><a  (click)="IR('Informes')">Informes</a></li>
+                <li><a  (click)="IR('Graficos')">Graficos</a></li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
                   <li><a routerLink="/Login"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
                 </ul>
         </div>
       </div>
-    </nav>
+  </nav>
+
+  <nav *ngIf="TIPO==2" class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+                                  
+          </button>
+          <a class="navbar-brand" routerLink="/Principal">Inicio</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a  (click)="IR('Viaje')">Pedir Viajes</a></li>
+                <li><a  (click)="IR('listaViajes')">Mis viajes</a></li>
+                <li><a  (click)="IR('Encuesta')">Encuestas</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                  <li><a routerLink="/Login"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+                </ul>
+        </div>
+      </div>
+  </nav>
+
+    <nav *ngIf="TIPO==3" class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+                                  
+          </button>
+          <a class="navbar-brand" routerLink="/Principal">Inicio</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a  (click)="IR('gestorViajes')">Viajes</a></li>
+                <li><a  (click)="IR('Graficos')">Graficos</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                  <li><a routerLink="/Login"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+                </ul>
+        </div>
+      </div>
+  </nav>

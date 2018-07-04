@@ -2,6 +2,10 @@
 
 <app-listado-remiseros (cambio)="Actualizar($event)" [listaUsuarios]="listadoParaCompartir"></app-listado-remiseros>
 
+<div *ngIf="gif"> 
+<app-preload-imagen ></app-preload-imagen>
+</div>
+
 <!--<button class="btn btn-info" (click)="agregar()" style="width: 100%">Agregar Empleado</button>
 
 <div *ngIf="isvalid">

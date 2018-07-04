@@ -19,11 +19,13 @@ import { ExponentialStrengthPipe} from './exponential-strength.pipe';
 import { RouterModule, Routes } from '@angular/router';
 import { RuteoModule } from './ruteo/ruteo.module';
 import { RecaptchaModule, RECAPTCHA_SETTINGS, RecaptchaSettings} from 'ng-recaptcha';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import {HttpService} from './servicios/http.service';
 import {UsuariosService} from './servicios/usuarios.service';
 import {VehiculosService} from './servicios/vehiculos.service';
 import {ViajesService} from './servicios/viajes.service';
+import {EncuestaService} from './servicios/encuesta.service';
 import {VerificarService} from './servicios/verificar.service';
 
 
@@ -35,6 +37,8 @@ import { ListaViajesComponent } from './componentes/lista-viajes/lista-viajes.co
 import { GestorViajesComponent } from './componentes/gestor-viajes/gestor-viajes.component';
 import { PreloadImagenComponent } from './componentes/preload-imagen/preload-imagen.component';
 import { EncuestaComponent } from './componentes/encuesta/encuesta.component';
+import { GraficosComponent } from './componentes/graficos/graficos.component';
+import { InformesComponent } from './componentes/informes/informes.component';
 
 
 @NgModule({
@@ -55,7 +59,9 @@ import { EncuestaComponent } from './componentes/encuesta/encuesta.component';
     GestorViajesComponent,
     PreloadImagenComponent,
     ExponentialStrengthPipe,
-    EncuestaComponent
+    EncuestaComponent,
+    GraficosComponent,
+    InformesComponent
   ],
   imports: [
     BrowserModule,
@@ -64,11 +70,12 @@ import { EncuestaComponent } from './componentes/encuesta/encuesta.component';
     ReactiveFormsModule,
     HttpClientModule,
     FileDropModule,
+    ChartsModule,
     AgmCoreModule.forRoot({ 
       apiKey: 'AIzaSyA3KKoeuXANsYY9u67GSzA6IxJEJG7OFjg',
     }),
     AgmDirectionModule,
-    RecaptchaModule.forRoot()
+    RecaptchaModule.forRoot(),
   ],
   providers: [
     {
@@ -77,7 +84,7 @@ import { EncuestaComponent } from './componentes/encuesta/encuesta.component';
     },
     UsuariosService,
     VehiculosService,
-    ViajesService,HttpService,
+    ViajesService,EncuestaService,HttpService,
     VerificarService],
   bootstrap: [AppComponent]
 })

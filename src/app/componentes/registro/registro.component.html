@@ -62,7 +62,7 @@
               </div>
               <br>
               <div>
-                <div style="padding-left: 35%">
+                <div class="captcha">
                   <re-captcha (resolved)="resolvedCaptcha($event)" siteKey="6LfpD18UAAAAAF5G961BFO14n0GnyW1GkubRzcU9"></re-captcha>
                 </div>
                 <br>
@@ -147,7 +147,7 @@
               </div>
               <br>
               <div>
-                <div style="padding-left: 35%">
+                <div class="captcha">
                   <re-captcha (resolved)="resolvedCaptcha($event)" siteKey="6LfpD18UAAAAAF5G961BFO14n0GnyW1GkubRzcU9"></re-captcha>
                 </div>
                 <br>
@@ -172,3 +172,6 @@
   </div>
 </div>
 
+<div *ngIf="gif2"> 
+<app-preload-imagen ></app-preload-imagen>
+</div>

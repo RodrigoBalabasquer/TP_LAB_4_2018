@@ -3,13 +3,13 @@
   <h1>Gestor de Horarios: </h1>
 
   <div class="row">
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12">
       <label class="form-control">Legajo de remisero</label>
     </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12">
       <input type="number" [(ngModel)]="legajo" class="form-control">
     </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12">
       <button class="btn btn-success" (click)="buscar()" style="width: 100%">Buscar Remisero</button>
     </div>
   </div>
@@ -18,25 +18,25 @@
 <br><br>
 
 <div class="container">
-  <div *ngIf="formulario">
+  <div class="formulario" *ngIf="formulario">
     <h1>Datos del horario</h1>
     <div class="row">
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+      <div class="col-lg-2 col-md-3 col-sm-0 col-xs-0">
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <label class="form-control">Horario de comienzo:</label>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <input type='time' [(ngModel)]="horario.timeDesde" class="form-control" />
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+      <div class="col-lg-2 col-md-3 col-sm-0 col-xs-0">
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <label class="form-control">Horario de fin:</label>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <input type='time' [(ngModel)]="horario.timeHasta" class="form-control" />
       </div>
       <br>
@@ -75,6 +75,10 @@
         </table>
       </div>
     </div>
-    <button class="btn btn-success" (click)="guardarHorario()" style="width: 100%">Actualizar Horario</button>
+    <button class="btn btn-success" (click)="guardarHorario()" [disabled]="idVehiculo == 0 || idVehiculo == null" style="width: 100%">Actualizar Horario</button>
   </div>
+</div>
+
+<div *ngIf="gif"> 
+<app-preload-imagen ></app-preload-imagen>
 </div>

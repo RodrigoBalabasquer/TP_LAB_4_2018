@@ -23,8 +23,8 @@ class UsuarioApi extends Usuario
        $sexo = $ArrayDeParametros['sexo'];
        $estado = $ArrayDeParametros['estado'];
 
-       $destino="../../Remiseria/src/assets/usuarios/";
-       //$destino="../../assets/usuarios/";
+       //$destino="../../Remiseria/src/assets/usuarios/";
+       $destino="../../assets/usuarios/";
        $archivos = $request->getUploadedFiles();
        $nombreAnterior=$archivos['foto']->getClientFilename();
        $extension= explode(".", $nombreAnterior);

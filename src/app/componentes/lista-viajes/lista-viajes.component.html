@@ -4,12 +4,6 @@
   <thead>
     <tr>
       <th>Horario</th>
-      <th>Duración</th>
-      <th>Distancia</th>
-      <th>Mensaje</th>
-      <th>Cantidad de Pasajeros</th>
-      <th>Precio</th>
-      <th>Medio de pago</th>
       <th>Estado</th>
     </tr>
   </thead>
@@ -17,51 +11,32 @@
     <tr *ngIf="viaje.estado == 1" style="background-color: blue">
       <!--Iniciado-->
       <td>{{viaje.horario}}</td>
-      <td>{{viaje.duracion}} Minutos</td>
-      <td>{{viaje.distancia}} Metros </td>
-      <td>{{viaje.comodidad}}</td>
-      <td>{{viaje.cantidad}} Pasajero/s</td>
-      <td>${{viaje.precio}}</td>
-      <td>{{viaje.medioDePago}}</td>
       <td>Iniciado</td>
       <td><button type="button" class="btn btn-primary" (click)="Ver(viaje)">Ver Datos</button></td>
-      <td><button type="button" class="btn btn-danger" (click)="Cancelar(viaje)">Cancelar</button></td>
+
+      <td><button type="button" class="btn btn-danger" (click)="cancelar(viaje)" onclick="document.getElementById('id01').style.display='block'">Cancelar</button></td>
+      <!--<td><button type="button" class="btn btn-danger" (click)="Cancelar(viaje)">Cancelar</button></td>-->
     </tr>
     <tr *ngIf="viaje.estado == 3" style="background-color: green">
       <!--En proceso-->
       <td>{{viaje.horario}}</td>
-      <td>{{viaje.duracion}} Minutos</td>
-      <td>{{viaje.distancia}} Metros </td>
-      <td>{{viaje.comodidad}}</td>
-      <td>{{viaje.cantidad}} Pasajero/s</td>
-      <td>${{viaje.precio}}</td>
-      <td>{{viaje.medioDePago}}</td>
       <td>En proceso</td>
       <td><button type="button" class="btn btn-primary" (click)="Ver(viaje)">Ver Datos</button></td>
-      <td><button type="button" class="btn btn-danger" (click)="Cancelar(viaje)">Cancelar</button></td>
+      <td><button type="button" class="btn btn-danger" (click)="cancelar(viaje)" onclick="document.getElementById('id01').style.display='block'">Cancelar</button></td>
+      
     </tr>
     <tr *ngIf="viaje.estado == 2" style="background-color: red">
       <td>{{viaje.horario}}</td>
-      <td>{{viaje.duracion}} Minutos</td>
-      <td>{{viaje.distancia}} Metros </td>
-      <td>{{viaje.comodidad}}</td>
-      <td>{{viaje.cantidad}} Pasajero/s</td>
-      <td>${{viaje.precio}}</td>
-      <td>{{viaje.medioDePago}}</td>
       <td>Cancelado</td>
       <td><button type="button" class="btn btn-primary" (click)="Ver(viaje)">Ver Datos</button></td>
+      <td>
     </tr>
     <tr *ngIf="viaje.estado == 4" style="background-color: green">
       <!--Finalizado-->
       <td>{{viaje.horario}}</td>
-      <td>{{viaje.duracion}} Minutos</td>
-      <td>{{viaje.distancia}} Metros </td>
-      <td>{{viaje.comodidad}}</td>
-      <td>{{viaje.cantidad}} Pasajero/s</td>
-      <td>${{viaje.precio}}</td>
-      <td>{{viaje.medioDePago}}</td>
       <td>Finalizado</td>
       <td><button type="button" class="btn btn-primary" (click)="Ver(viaje)">Ver Datos</button></td>
+      <td>
     </tr>
   </tbody>
 </table>
@@ -72,7 +47,7 @@
   </agm-map>
   <br>
   <div class="container">
-    <div class="row">
+    <div *ngIf="miViaje.estado == 1 || miViaje.estado == 3" class="row">
       <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">
         <label>Origen</label>
       </div>
@@ -87,7 +62,7 @@
       </div>
     </div>
     <br>
-    <div class="row">
+    <div *ngIf="miViaje.estado == 1 || miViaje.estado == 3" class="row">
       <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">
         <label>Destino</label>
       </div>
@@ -102,7 +77,7 @@
       </div>
     </div>
     <br>
-    <div style="text-align: center">
+    <div *ngIf="miViaje.estado == 1 || miViaje.estado == 3" style="text-align: center">
       <button type="button" class="btn btn-primary" (click)="Trazar()">Trazar Ruta</button>
     </div>
     <br>
@@ -111,7 +86,7 @@
         <label>Fecha de viaje </label>
       </div>
       <div class="col-lg-10 col-md-10 col-sm-10 col-xs-7">
-        <input class="form-control" type="datetime-local"  [(ngModel)]="miViaje.horario">
+        <input class="form-control" type="datetime-local" [(ngModel)]="miViaje.horario">
       </div>
     </div>
     <br>
@@ -151,15 +126,51 @@
       </div>
     </div>
     <br>
-    <div *ngIf="!captchConfirm" style="text-align: center">
+    <div *ngIf="!captchConfirm && (miViaje.estado == 1 || miViaje.estado == 3)" style="text-align: center">
       <img style="width: 150px;height: 150px" src="../../../assets/captcha/{{captcha.img}}"><br>
       <input type="string" class="form-control" [(ngModel)]="captch" placeholder="No soy un bot">
       <button type="button" class="btn btn-info" (click)="confirmarCaptcha()">Confirmar</button>
     </div>
     <br>
-    <div *ngIf="captchConfirm" style="text-align: center">
+    <div *ngIf="captchConfirm && (miViaje.estado == 1 || miViaje.estado == 3)" style="text-align: center">
       <button type="button" class="btn btn-primary" (click)="Actualizar()">Guardar cambios</button>
     </div>
   </div>
 
+</div>
+
+<div id="id01" class="modal">
+  <div class="modal-content">
+    <h3>Motivo de cancelación</h3>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <input type="text" [(ngModel)]="motivo" class="form-control" placeholder="Ingresa tu motivo">
+      </div>
+      <br><br>
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-1">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-5">
+        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="btn btn-danger">Cancelar</button>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-5">
+        <button type="button" onclick="document.getElementById('id01').style.display='none'" (click)="Cancelar()" class="btn btn-info">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    // Get the modal
+    var modal = document.getElementById('id01');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+</script>
+
+<div *ngIf="gif"> 
+<app-preload-imagen ></app-preload-imagen>
 </div>

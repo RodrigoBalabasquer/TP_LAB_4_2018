@@ -15,38 +15,53 @@ import { Vehiculo } from '../../clases/vehiculo';
 })
 export class GestorViajesComponent implements OnInit {
 
+  TIPO: number;
+  legajo: number;
   listaViajes: Array<Viaje> = [];
   listaHorarios: Array<any> = [];
   miViaje: Viaje;
-  mostrar:boolean = false;
+  mostrar: boolean = false;
   dir = undefined;
-   constructor(private router: Router, public http: HttpService, public ViajesServicio: ViajesService,public HorariosServicio: HorarioService, public verificarService: VerificarService) {
+  motivo: string = "";
+
+  latD:number = 0;
+  latH:number = 0;
+  lngD:number = 0;
+  lngH:number = 0;
+
+  constructor(private router: Router, public http: HttpService, public ViajesServicio: ViajesService, public HorariosServicio: HorarioService, public verificarService: VerificarService) {
   }
   public llamaServicePromesa() {
-    this.ViajesServicio.listarViajesPromesa().then(
-      (listadoPromesa) => {
-        debugger;
-        this.listaViajes = listadoPromesa;
-      }
-    );
+    if (this.TIPO == 1) {
+      this.ViajesServicio.listarViajesPromesa().then(
+        (listadoPromesa) => {
+          this.listaViajes = listadoPromesa;
+        }
+      );
+    }
+    if (this.TIPO == 3) {
+      this.ViajesServicio.listarViajesRemiseroPromesa(this.legajo).then(
+        (listadoPromesa) => {
+          this.listaViajes = listadoPromesa;
+        }
+      );
+    }
   }
-  Ver(viaje:Viaje)
-  { 
-    this.miViaje = new Viaje(viaje.id,null,null,viaje.legajoCliente,viaje.latDesde,viaje.latHasta,viaje.lngDesde,viaje.lngHasta,viaje.duracion,viaje.distancia,viaje.precio,viaje.cantidad
-    ,viaje.comodidad,viaje.medioDePago,viaje.estado,viaje.horario);
-    this.miViaje.horario = this.miViaje.horario.replace(" ","T");
+  Ver(viaje: Viaje) {
+    debugger;
+    this.miViaje = new Viaje(viaje.id, null, null, viaje.legajoCliente, viaje.latDesde, viaje.latHasta, viaje.lngDesde, viaje.lngHasta, viaje.duracion, viaje.distancia, viaje.precio, viaje.cantidad
+      , viaje.comodidad, viaje.medioDePago, viaje.estado, viaje.horario);
+    this.miViaje.horario = this.miViaje.horario.replace(" ", "T");
     this.mostrar = true;
     this.trazarRuta();
     this.ListarHorarios();
   }
-  ListarHorarios()
-  { 
+  ListarHorarios() {
     let horario = this.miViaje.horario.split("T");;
-    this.HorariosServicio.BuscarHorarioViaje(horario[1]).then((datos)=>{
+    this.HorariosServicio.BuscarHorarioViaje(horario[1]).then((datos) => {
       let dataList = [];
-      for(let i = 0;i<datos.array.length;i++)
-      {
-        let val :any= {};
+      for (let i = 0; i < datos.array.length; i++) {
+        let val: any = {};
         val = datos.array[i];
         val.foto = datos.fotos[i];
         dataList.push(val);
@@ -55,9 +70,14 @@ export class GestorViajesComponent implements OnInit {
     });
   }
   trazarRuta() {
+    debugger;
+    this.latD = parseFloat(this.miViaje.latDesde.toString());
+    this.latH = parseFloat(this.miViaje.latHasta.toString());
+    this.lngD = parseFloat(this.miViaje.lngDesde.toString());
+    this.lngH =  parseFloat(this.miViaje.lngHasta.toString());
     this.dir = {
-      destination: { lat: this.miViaje.latHasta, lng: this.miViaje.lngHasta },
-      origin: { lat: this.miViaje.latDesde, lng: this.miViaje.lngDesde },
+      destination: { lat: this.latH, lng: this.lngH},
+      origin: { lat: this.latD, lng: this.lngD },
       travelMode: 'DRIVING',
       transitOptions: {
         departureTime: new Date('2018/03/20 12:00'),
@@ -65,28 +85,52 @@ export class GestorViajesComponent implements OnInit {
       }
     }
   }
-  Asignar(horario: any)
-  { 
+  Asignar(horario: any) {
     debugger;
-    this.miViaje.remisero = new Remisero(null,null,null,null,null,null,null,null,null,null,null);
-    this.miViaje.vehiculo = new Vehiculo(null,null,null,null,null,null,null);
+    this.miViaje.remisero = new Remisero(null, null, null, null, null, null, null, null, null, null, null);
+    this.miViaje.vehiculo = new Vehiculo(null, null, null, null, null, null, null);
     this.miViaje.estado = 3;
     this.miViaje.remisero.legajo = horario.remisero;
     this.miViaje.vehiculo.id = horario.vehiculo;
-    this.ViajesServicio.ActualizarViaje2(this.miViaje).then((datos)=>{
-      alert(datos);
+    this.ViajesServicio.ActualizarViaje2(this.miViaje).then((datos) => {
+     swal({
+          title: datos,
+          icon: "success",
+        });
     })
   }
-  Cancelar(viaje : Viaje)
-  { 
-    viaje.estado = 2;
-    this.ViajesServicio.ActualizarViaje(viaje).then((datos)=>{
-      debugger;
-      alert(datos);
+  cancelar(viaje: Viaje) {
+    this.miViaje = viaje;
+  }
+  Cancelar() {
+    this.miViaje.estado = 2;
+    this.miViaje.comodidad = this.motivo;
+    this.ViajesServicio.ActualizarViaje(this.miViaje).then((datos) => {
+      swal({
+          title: datos,
+          icon: "success",
+        });
+    })
+  }
+  Finalizar(viaje: Viaje){
+    viaje.estado = 4;
+    this.ViajesServicio.ActualizarViaje(viaje).then((datos) => {
+      swal({
+          title: datos,
+          icon: "success",
+        });
     })
   }
   ngOnInit() {
-    this.llamaServicePromesa();
+    let tokenjs = localStorage.getItem("Token");
+    let token: any = tokenjs != null ? JSON.parse(tokenjs) : null;
+    this.verificarService.recuperToken(token).then(
+      (datos) => {
+        this.TIPO = datos.respuesta.tipo;
+        this.legajo = datos.respuesta.legajo;
+        this.llamaServicePromesa();
+      }
+    );
   }
 
 }

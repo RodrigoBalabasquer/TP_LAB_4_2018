@@ -42,6 +42,8 @@ export class RegistroComponent implements OnInit {
   public nombreFoto2: string = "";
 
   public gif = false;
+  gif2 = false;
+  repetidor: any;
   resolvedCaptcha(result) {
     this.resolved = true;
   }
@@ -171,6 +173,8 @@ export class RegistroComponent implements OnInit {
     this.router.navigate(['/Login']);
   }
   Registrar() {
+    this.gif2 = true;
+    this.repetidor = setInterval(() => {
     if (this.tipo == "2") {
       this.miServicioUsuario.RegistrarCliente(this.miUsuario, this.file)
         .then((datos) => {
@@ -219,7 +223,7 @@ export class RegistroComponent implements OnInit {
           );
       }
     }
-
+    }, 3000);
   }
   registrarUsuario() {
     this.miServicioUsuario.BuscarUsuario(this.miUsuario.usuario, this.miUsuario.contrasenia)
@@ -238,8 +242,12 @@ export class RegistroComponent implements OnInit {
 
   crearToken(datos: any) {
     this.miServicioVerificacion.crearToken(datos).then((datos) => {
-      if (datos == true)
+      if (datos == true){
+        this.gif2 = false;
+        clearInterval(this.repetidor);
         this.router.navigate(['/Principal']);
+
+      }
     })
   }
   public dropped(event: UploadEvent) {
