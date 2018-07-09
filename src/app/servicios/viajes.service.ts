@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { Viaje } from '../clases/viaje';
+import { Remisero } from '../clases/remisero';
+import { Vehiculo } from '../clases/vehiculo';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +50,9 @@ export class ViajesService {
           console.log(datos);
           let miArray: Array<Viaje> = new Array<Viaje>();
           for (let unDato of datos) {
-            let viaje = new Viaje(unDato.id, unDato.legajoRemisero, unDato.idVehiculo,
+            let remisero: Remisero = new Remisero(unDato.legajoRemisero,null,null,null,null,null,unDato.FotoRemisero,null,null,null,null);
+            let vehiculo: Vehiculo = new Vehiculo(unDato.idVehiculo,null,null,null,unDato.FotoVehiculo,null,null);
+            let viaje = new Viaje(unDato.viajeId, remisero, vehiculo,
               unDato.legajoCliente, unDato.latDesde, unDato.latHasta, unDato.lngDesde, unDato.lngHasta,
               unDato.duracion, unDato.distancia, unDato.precio, unDato.cantidadPasajeros, unDato.comodidad, unDato.medioDePago, unDato.estado, unDato.horario);
             miArray.push(viaje);
@@ -60,16 +64,17 @@ export class ViajesService {
     );
     return promesa;
   }
-  listarViajesRemiseroPromesa(legajo): Promise<Array<Viaje>> {
-    let promesa: Promise<Array<Viaje>> = new Promise((resolve, reject) => {
+  listarViajesRemiseroPromesa(legajo): Promise<Array<any>> {
+    let promesa: Promise<Array<any>> = new Promise((resolve, reject) => {
       this.miHttp.dameTodasLasPromesasRemiseroViajes('TraerViajesRemisero', legajo)
         .then(datos => {
           console.log(datos);
-          let miArray: Array<Viaje> = new Array<Viaje>();
+          let miArray: Array<any> = new Array<any>();
           for (let unDato of datos) {
-            let viaje = new Viaje(unDato.id, unDato.legajoRemisero, unDato.idVehiculo,
+            let viaje: any = new Viaje(unDato.viajeId, null, null,
               unDato.legajoCliente, unDato.latDesde, unDato.latHasta, unDato.lngDesde, unDato.lngHasta,
               unDato.duracion, unDato.distancia, unDato.precio, unDato.cantidadPasajeros, unDato.comodidad, unDato.medioDePago, unDato.estado, unDato.horario);
+            viaje.FotoCliente = unDato.FotoCliente;
             miArray.push(viaje);
           }
           resolve(miArray);
@@ -79,16 +84,19 @@ export class ViajesService {
     );
     return promesa;
   }
-  listarViajesPromesa(): Promise<Array<Viaje>> {
-    let promesa: Promise<Array<Viaje>> = new Promise((resolve, reject) => {
+  listarViajesPromesa(): Promise<Array<any>> {
+    let promesa: Promise<Array<any>> = new Promise((resolve, reject) => {
       this.miHttp.dameTodasLasPromesasViajes('TraerViajes')
         .then(datos => {
           console.log(datos);
-          let miArray: Array<Viaje> = new Array<Viaje>();
+          let miArray: Array<any> = new Array<any>();
           for (let unDato of datos) {
-            let viaje = new Viaje(unDato.id, unDato.legajoRemisero, unDato.idVehiculo,
+            let remisero: Remisero = new Remisero(unDato.legajoRemisero,null,null,null,null,null,unDato.FotoRemisero,null,null,null,null);
+            let vehiculo: Vehiculo = new Vehiculo(unDato.idVehiculo,null,null,null,unDato.FotoVehiculo,null,null);
+            let viaje : any= new Viaje(unDato.viajeId, remisero, vehiculo,
               unDato.legajoCliente, unDato.latDesde, unDato.latHasta, unDato.lngDesde, unDato.lngHasta,
               unDato.duracion, unDato.distancia, unDato.precio, unDato.cantidadPasajeros, unDato.comodidad, unDato.medioDePago, unDato.estado, unDato.horario);
+            viaje.FotoCliente = unDato.FotoCliente;
             miArray.push(viaje);
           }
           resolve(miArray);

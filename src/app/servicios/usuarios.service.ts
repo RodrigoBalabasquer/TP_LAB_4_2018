@@ -115,7 +115,6 @@ export class UsuariosService {
   }
   Contratar(Legajo:string):Promise<boolean>
   {
-    debugger;
     let result: Promise<boolean> = this.miHttp.ContratarEmpleado('contratar',Legajo)
       .then(datos => {
         return true;

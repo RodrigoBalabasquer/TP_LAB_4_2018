@@ -105,7 +105,6 @@ export class AbmVehiculosComponent implements OnInit {
       const fileEntry = this.files[0].fileEntry as FileSystemFileEntry;
 
       fileEntry.file((file: File) => {
-        debugger;
         this.nombreFoto1 = file.name;
         this.gif = false;
         this.file = file;

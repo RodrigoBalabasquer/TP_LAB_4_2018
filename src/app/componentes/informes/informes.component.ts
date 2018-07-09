@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ViajesService } from '../../servicios/viajes.service';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+declare var jsPDF: any;
 
 @Component({
   selector: 'app-informes',
@@ -99,7 +100,56 @@ export class InformesComponent implements OnInit {
         }
         data.push(dato);
       }
-      new Angular2Csv(data, 'Usuarios', options);
+      new Angular2Csv(data, 'Informe', options);
+      this.gif = false;
+      clearInterval(this.repetidor);
+    }, 3000);
+  }
+  ExportarPDF(){
+     this.gif = true;
+    this.repetidor = setInterval(() => {
+      var columns = [
+      { title: "Cliente", dataKey: "client" },
+      { title: "Horario", dataKey: "hour" },
+      { title: "Estado", dataKey: "state" },
+      { title: "Remisero", dataKey: "remis" },
+      { title: "Vehiculo", dataKey: "drive" },
+      /*{ title: "Precio", dataKey: "price" },
+      { title: "Medio de pago", dataKey: "paid" },
+      { title: "Distancia", dataKey: "distance" },
+      { title: "Duración", dataKey: "duration" },
+      { title: "Pasajeros", dataKey: "cant" },
+      { title: "Mensaje", dataKey: "message" },*/
+    ];
+    var rows :Array<any> = []; 
+    for (let i = 0; i < this.listaDeDatos.length; i++) {
+        var dato = {
+          client : this.listaDeDatos[i].Cliente,
+          hour: this.listaDeDatos[i].Horario,
+          state: this.listaDeDatos[i].Estado,
+          remis: this.listaDeDatos[i].Remisero,
+          drive: this.listaDeDatos[i].Vehiculo
+          /*price: this.listaDeDatos[i].Precio,
+          paid: this.listaDeDatos[i].MedioPago,
+          distance: this.listaDeDatos[i].Distancia,
+          duration: this.listaDeDatos[i].Duracion,
+          cant: this.listaDeDatos[i].Pasajeros,
+          message: this.listaDeDatos[i].Mensaje,*/
+        }
+        rows.push(dato);
+      }
+    // Only pt supported (not mm or in)
+    var mes = this.mes;
+    var anio = this.anio;
+    var doc = new jsPDF('p', 'pt');
+    doc.autoTable(columns, rows, {
+      styles: { fillColor: [100, 255, 255]},
+      //margin: { top: 60 },
+      addPageContent: function (data) {
+        doc.text("Informe del "+mes+" del "+anio+":", 40, 30);
+      }
+    });
+    doc.save('Informe.pdf');
       this.gif = false;
       clearInterval(this.repetidor);
     }, 3000);

@@ -17,7 +17,8 @@ export class GestorViajesComponent implements OnInit {
 
   TIPO: number;
   legajo: number;
-  listaViajes: Array<Viaje> = [];
+  listaViajes: Array<any> = [];
+  listaTotal:  Array<any> = [];
   listaHorarios: Array<any> = [];
   miViaje: Viaje;
   mostrar: boolean = false;
@@ -29,6 +30,9 @@ export class GestorViajesComponent implements OnInit {
   lngD:number = 0;
   lngH:number = 0;
 
+  horarioSeleccion;
+  estadoSeleccion = "0";
+
   constructor(private router: Router, public http: HttpService, public ViajesServicio: ViajesService, public HorariosServicio: HorarioService, public verificarService: VerificarService) {
   }
   public llamaServicePromesa() {
@@ -36,6 +40,7 @@ export class GestorViajesComponent implements OnInit {
       this.ViajesServicio.listarViajesPromesa().then(
         (listadoPromesa) => {
           this.listaViajes = listadoPromesa;
+          this.listaTotal = listadoPromesa;
         }
       );
     }
@@ -43,12 +48,45 @@ export class GestorViajesComponent implements OnInit {
       this.ViajesServicio.listarViajesRemiseroPromesa(this.legajo).then(
         (listadoPromesa) => {
           this.listaViajes = listadoPromesa;
+          this.listaTotal = listadoPromesa;
         }
       );
     }
   }
+
+  buscar(){
+    var lista :Array<Viaje> = []
+    this.listaViajes = [];
+    if(this.estadoSeleccion != "0" || (this.horarioSeleccion != null && this.horarioSeleccion != ""))
+    {
+      for(let i = 0;i<this.listaTotal.length;i++)
+      { 
+        if(this.estadoSeleccion != "0" && (this.horarioSeleccion == null || this.horarioSeleccion == "")){
+          if(this.listaTotal[i].estado.toString() == this.estadoSeleccion)
+            lista.push(this.listaTotal[i]);
+        }
+        if(this.estadoSeleccion == "0" && (this.horarioSeleccion != null || this.horarioSeleccion != "")){
+          var dataR = this.horarioSeleccion.split("-");
+          var dataB = this.listaTotal[i].horario.split("-");
+          if(dataR[0] == dataB[0] && dataR[1] == dataB[1] && dataR[2] == dataB[2].split(" ")[0])
+            lista.push(this.listaTotal[i]);
+        }
+        if(this.estadoSeleccion != "0" && (this.horarioSeleccion != null && this.horarioSeleccion != "")){
+          var dataR = this.horarioSeleccion.split("-");
+          var dataB = this.listaTotal[i].horario.split("-");
+          if(dataR[0] == dataB[0] && dataR[1] == dataB[1] && dataR[2] == dataB[2].split(" ")[0] && this.listaTotal[i].estado.toString() == this.estadoSeleccion)
+            lista.push(this.listaTotal[i]);
+        }
+        
+      }
+      this.listaViajes = lista;
+    }
+    else{
+      this.listaViajes = this.listaTotal;
+    }
+  }
+
   Ver(viaje: Viaje) {
-    debugger;
     this.miViaje = new Viaje(viaje.id, null, null, viaje.legajoCliente, viaje.latDesde, viaje.latHasta, viaje.lngDesde, viaje.lngHasta, viaje.duracion, viaje.distancia, viaje.precio, viaje.cantidad
       , viaje.comodidad, viaje.medioDePago, viaje.estado, viaje.horario);
     this.miViaje.horario = this.miViaje.horario.replace(" ", "T");
@@ -70,7 +108,6 @@ export class GestorViajesComponent implements OnInit {
     });
   }
   trazarRuta() {
-    debugger;
     this.latD = parseFloat(this.miViaje.latDesde.toString());
     this.latH = parseFloat(this.miViaje.latHasta.toString());
     this.lngD = parseFloat(this.miViaje.lngDesde.toString());
@@ -86,7 +123,6 @@ export class GestorViajesComponent implements OnInit {
     }
   }
   Asignar(horario: any) {
-    debugger;
     this.miViaje.remisero = new Remisero(null, null, null, null, null, null, null, null, null, null, null);
     this.miViaje.vehiculo = new Vehiculo(null, null, null, null, null, null, null);
     this.miViaje.estado = 3;
@@ -97,6 +133,7 @@ export class GestorViajesComponent implements OnInit {
           title: datos,
           icon: "success",
         });
+      this.llamaServicePromesa();
     })
   }
   cancelar(viaje: Viaje) {
@@ -119,6 +156,7 @@ export class GestorViajesComponent implements OnInit {
           title: datos,
           icon: "success",
         });
+        this.llamaServicePromesa();
     })
   }
   ngOnInit() {

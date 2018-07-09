@@ -39,6 +39,11 @@ import { PreloadImagenComponent } from './componentes/preload-imagen/preload-ima
 import { EncuestaComponent } from './componentes/encuesta/encuesta.component';
 import { GraficosComponent } from './componentes/graficos/graficos.component';
 import { InformesComponent } from './componentes/informes/informes.component';
+import { SexoPipe } from './pipes/sexo.pipe';
+import { EstadoPipe } from './pipes/estado.pipe';
+import { EstadoVehiculoPipe } from './pipes/estado-vehiculo.pipe';
+import { ColorDirective } from './directiva/color.directive';
+import { ColorVehiculoDirective } from './directiva/color-vehiculo.directive';
 
 
 @NgModule({
@@ -61,7 +66,12 @@ import { InformesComponent } from './componentes/informes/informes.component';
     ExponentialStrengthPipe,
     EncuestaComponent,
     GraficosComponent,
-    InformesComponent
+    InformesComponent,
+    SexoPipe,
+    EstadoPipe,
+    EstadoVehiculoPipe,
+    ColorDirective,
+    ColorVehiculoDirective
   ],
   imports: [
     BrowserModule,

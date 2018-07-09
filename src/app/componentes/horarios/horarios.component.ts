@@ -30,9 +30,12 @@ export class HorariosComponent implements OnInit {
     this.horario.vehiculo = new Vehiculo(null, null, null, null, null, null, null);
   }
   buscar() {
+    this.patenteVehiculo = "";
+    this.horario = new Horario(null, null, null, null, null, null);
+    this.horario.remisero = new Remisero(null, null, null, null, null, null, null, null, null, null, null);
+    this.horario.vehiculo = new Vehiculo(null, null, null, null, null, null, null);
     this.miServicioHorario.BuscarRemisero(this.legajo).then(
       (datos) => {
-        debugger;
         if (datos == null) {
           swal({
             title: "No se encontro remisero",
@@ -51,10 +54,11 @@ export class HorariosComponent implements OnInit {
           else {
             this.formulario = true;
             this.idRemisero = datos[0].legajo;
-            debugger;
             this.idVehiculo = datos[0].vehiculo.id;
             if (this.idVehiculo == null)
               this.formularioVehiculo = true;
+            else
+              this.formularioVehiculo = false;
             this.miServicioHorario.BuscarHorario(this.legajo).then(
               (datos) => {
                 if (datos != null) {
@@ -85,33 +89,52 @@ export class HorariosComponent implements OnInit {
 
   }
   guardarHorario() {
-    this.gif = true;
-    this.repetidor = setInterval(() => {
-      this.miServicioHorario.VerificarHorario(this.idRemisero, this.idVehiculo, this.horario.timeDesde, this.horario.timeHasta).then(
-        (datos) => {
-          this.gif = false;
-          clearInterval(this.repetidor);
-          if (datos == 0) {
-            this.horario.remisero.legajo = this.idRemisero;
-            this.horario.vehiculo.id = this.idVehiculo;
-            this.horario.id = this.idHorario;
-            this.miServicioHorario.guardarHorario(this.horario).then((datos) => {
-              swal({
-              title: "Horario actualizado",
-              icon: "success",
-            });
-            })
-          }
-          else {
-            swal({
-              title: "Horario invalido",
-              icon: "warning",
-            });
-          }
-        }
-      );
-    }, 3000);
-
+    if (this.horario.timeDesde == null || this.horario.timeDesde == "" || this.horario.timeHasta == null || this.horario.timeHasta == "") {
+      swal({
+        title: "Debe ingresar datos faltantes",
+        icon: "warning",
+      });
+    }
+    else {
+      var horaDesde = this.horario.timeDesde.split(":");
+      var horaHasta = this.horario.timeHasta.split(":");
+      var Desde = parseInt(horaDesde[0]);
+      var Hasta = parseInt(horaHasta[0]);
+      if (Desde > Hasta) {
+        swal({
+          title: "La hora desde no puede superar a la hora hasta",
+          icon: "warning",
+        });
+      }
+      else {
+        this.gif = true;
+        this.repetidor = setInterval(() => {
+          this.miServicioHorario.VerificarHorario(this.idRemisero, this.idVehiculo, this.horario.timeDesde, this.horario.timeHasta).then(
+            (datos) => {
+              this.gif = false;
+              clearInterval(this.repetidor);
+              if (datos == 0) {
+                this.horario.remisero.legajo = this.idRemisero;
+                this.horario.vehiculo.id = this.idVehiculo;
+                this.horario.id = this.idHorario;
+                this.miServicioHorario.guardarHorario(this.horario).then((datos) => {
+                  swal({
+                    title: "Horario actualizado",
+                    icon: "success",
+                  });
+                })
+              }
+              else {
+                swal({
+                  title: "Horario invalido",
+                  icon: "warning",
+                });
+              }
+            }
+          );
+        }, 3000);
+      }
+    }
   }
   elegir(id: number, patente: string) {
     this.idVehiculo = id;

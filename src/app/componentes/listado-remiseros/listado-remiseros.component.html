@@ -1,7 +1,7 @@
 <h1>Lista de Empleados: </h1>
 <table class='table table-hover table-responsive table-fixed'>
   <thead>
-    <tr>
+    <tr style="font-size: 25px;font-family: Georgia, 'Times New Roman', serif;">
       <th>Legajo</th>
       <th>Nombre</th>
       <th>Apellido</th>
@@ -13,7 +13,21 @@
     </tr>
   </thead>
   <tbody *ngFor="let usuario of listaUsuarios" >
-    <tr *ngIf="usuario.estado == 1" style="background-color: blue">
+    <tr [appColor]=usuario.estado style="font-size: 25px;font-family: Georgia, 'Times New Roman', serif;">
+      <td>{{usuario.legajo}} </td> 
+      <td>{{usuario.nombre}} </td>
+      <td>{{usuario.apellido}}</td>
+      <td>{{usuario.fechaNacimiento}}</td>
+      <td>{{usuario.sexo | sexo}}</td>
+      <td>{{usuario.estado | estado}}</td>
+      <td><img  style="width:100px;height:100px" class='fotoGrilla'  src="../../../assets/usuarios/{{usuario.foto}}" /></td>
+      <td *ngIf="usuario.vehiculo.foto != null"><img  style="width:100px;height:100px" class='fotoGrilla'  src="../../../assets/vehiculos/{{usuario.vehiculo.foto}}" /></td>
+      <td *ngIf="usuario.vehiculo.foto == null">Sin Vehiculo</td>
+      <td *ngIf="usuario.estado == '1'"><button class="btn btn-info" (click)="Contratar(usuario.legajo)" style="width: 100%">Contratar Empleado</button></td>
+      <td *ngIf="usuario.estado == '2'"><button class="btn btn-danger" (click)="Desabilitar(usuario.legajo)" style="width: 100%">Desabilitar Empleado</button></td>
+      <td *ngIf="usuario.estado == '3'"><button class="btn btn-success" (click)="Habilitar(usuario.legajo)" style="width: 100%">Habilitar Empleado</button></td>
+    </tr> 
+    <!--<tr *ngIf="usuario.estado == 1" style="background-color: blue">
       <td>{{usuario.legajo}} </td> 
       <td>{{usuario.nombre}} </td>
       <td>{{usuario.apellido}}</td>
@@ -48,6 +62,6 @@
       <td *ngIf="usuario.vehiculo.foto != null"><img  style="width:100px;height:100px" class='fotoGrilla'  src="../../../assets/vehiculos/{{usuario.vehiculo.foto}}" /></td>
       <td *ngIf="usuario.vehiculo.foto == null">Sin Vehiculo</td>
       <td><button class="btn btn-success" (click)="Habilitar(usuario.legajo)" style="width: 100%">Habilitar Empleado</button></td>
-    </tr>     
+    </tr>     -->
   </tbody>
 </table>

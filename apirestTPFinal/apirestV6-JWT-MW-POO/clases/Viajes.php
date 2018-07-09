@@ -40,19 +40,30 @@ class Viajes
         return $objetoAccesoDato->RetornarUltimoIdInsertado();
     }
     public static function todosLosViajesCliente($legajo)
-    {
+    {       
+        
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT *
-            FROM viajes  
+            // WHERE legajoCliente = '$legajo'");
+            // WHERE legajoCliente = '$legajo'");
+            $consulta =$objetoAccesoDato->RetornarConsulta("SELECT V.id as viajeId,V.latDesde,V.lngDesde,V.latHasta,V.lngHasta,V.estado,V.duracion,V.distancia,V.precio,V.horario,V.cantidadPasajeros,V.medioDePago,
+            V.comodidad,V.legajoCliente,V.legajoRemisero,V.idVehiculo,U.foto as FotoRemisero,VH.foto as FotoVehiculo
+            FROM viajes as V
+            LEFT JOIN usuarios2 as U ON U.legajo = V.legajoRemisero
+            LEFT JOIN vehiculos as VH ON VH.id = V.idVehiculo  
             WHERE legajoCliente = '$legajo'");
+			// $consulta =$objetoAccesoDato->RetornarConsulta("SELECT *
+            // FROM viajes as V
+            // WHERE legajoCliente = '$legajo'");
             $consulta->execute();			
 			return $consulta->fetchAll(PDO::FETCH_CLASS, "Viajes");		
     }
     public static function todosLosViajesRemisero($legajo)
     {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT *
-            FROM viajes  
+			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT V.id as viajeId,V.latDesde,V.lngDesde,V.latHasta,V.lngHasta,V.estado,V.duracion,V.distancia,V.precio,V.horario,V.cantidadPasajeros,V.medioDePago,
+            V.comodidad,V.legajoCliente,C.foto as FotoCliente
+            FROM viajes as V
+            LEFT JOIN usuarios2 as C ON C.legajo = V.legajoCliente
             WHERE legajoRemisero = '$legajo'");
             $consulta->execute();			
 			return $consulta->fetchAll(PDO::FETCH_CLASS, "Viajes");		
@@ -60,8 +71,12 @@ class Viajes
     public static function todosLosViajes()
     {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT *
-            FROM viajes  
+			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT V.id as viajeId,V.latDesde,V.lngDesde,V.latHasta,V.lngHasta,V.estado,V.duracion,V.distancia,V.precio,V.horario,V.cantidadPasajeros,V.medioDePago,
+            V.comodidad,V.legajoCliente,V.legajoRemisero,V.idVehiculo,U.foto as FotoRemisero,C.foto as FotoCliente,VH.foto as FotoVehiculo
+            FROM viajes as V
+            LEFT JOIN usuarios2 as U ON U.legajo = V.legajoRemisero
+            LEFT JOIN usuarios2 as C ON C.legajo = V.legajoCliente
+            LEFT JOIN vehiculos as VH ON VH.id = V.idVehiculo  
             WHERE 1");
             $consulta->execute();			
 			return $consulta->fetchAll(PDO::FETCH_CLASS, "Viajes");		

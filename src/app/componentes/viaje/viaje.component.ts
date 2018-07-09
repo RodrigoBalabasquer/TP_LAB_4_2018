@@ -24,7 +24,7 @@ export class ViajeComponent implements OnInit {
   captchas = [
     {
       img: "captcha1.png",
-      value: "Mr Blocked"
+      value: "Mr blocked"
     },
     {
       img: "captcha2.png",
@@ -56,7 +56,6 @@ export class ViajeComponent implements OnInit {
   legajo: number;
   ruta = false;
 
-
   latDesde: number = 0;
   lngDesde: number = 0;
   latHasta: number = 0;
@@ -81,6 +80,13 @@ export class ViajeComponent implements OnInit {
   confirmarCaptcha() {
     if (this.captch == this.captcha.value)
       this.captchConfirm = true;
+    else {
+      swal({
+        title: "Captcha incorrecto",
+        icon: "warning",
+      });
+      this.captcha = this.captchas[Math.floor((Math.random() * 3) + 1) - 1];
+    }
   }
   Trazar() {
     this.direccionDesde = this.localidadDesde + "-" + this.calleDesde.replace(/\s/g, "-") + "-" + this.numeroDesde;
@@ -110,32 +116,126 @@ export class ViajeComponent implements OnInit {
     }
   }
   Crearviaje() {
-    this.gif = true;
-    this.repetidor = setInterval(() => {
-      this.miViaje.cantidad = this.cant;
-      this.miViaje.comodidad = this.comodidad;
-      this.miViaje.distancia = this.distancia;
-      this.miViaje.duracion = this.duracion;
-      this.miViaje.horario = this.horario.replace("T", " ");
-      this.miViaje.latDesde = this.latDesde;
-      this.miViaje.latHasta = this.latHasta;
-      this.miViaje.legajoCliente = this.legajo;
-      this.miViaje.lngDesde = this.lngDesde;
-      this.miViaje.lngHasta = this.lngHasta;
-      this.miViaje.medioDePago = this.medioDePago;
-      this.miViaje.precio = this.precio;
-      this.miViajeServicio.RegistrarViaje(this.miViaje).then(
-        (datos) => {
-          this.gif = false;
-          clearInterval(this.repetidor);
-          swal({
-            title: "Viaje registrado",
-            icon: "success",
-          });
-          this.router.navigate(['/Principal']);
+    //Horario actual
+    var hoy = new Date();
+    var dd = hoy.getDate();
+    var mm = hoy.getMonth() + 1; //hoy es 0!
+    var yyyy = hoy.getFullYear();
+    var h = hoy.getHours();
+    //Horario registrado
+    var horarioRegistrado = this.horario.split('-');
+    var anio = parseInt(horarioRegistrado[0]);
+    var mes = parseInt(horarioRegistrado[1]);
+    var dia = parseInt(horarioRegistrado[2].split('T')[0]);
+    var hora = parseInt(horarioRegistrado[2].split('T')[1].split(':')[0])
+    if (yyyy == anio && mes >= mm) {
+      if (mes == mm) {
+        if (dia > dd) {
+          this.gif = true;
+          this.repetidor = setInterval(() => {
+            this.miViaje.cantidad = this.cant;
+            this.miViaje.comodidad = this.comodidad;
+            this.miViaje.distancia = this.distancia;
+            this.miViaje.duracion = this.duracion;
+            this.miViaje.horario = this.horario.replace("T", " ");
+            this.miViaje.latDesde = this.latDesde;
+            this.miViaje.latHasta = this.latHasta;
+            this.miViaje.legajoCliente = this.legajo;
+            this.miViaje.lngDesde = this.lngDesde;
+            this.miViaje.lngHasta = this.lngHasta;
+            this.miViaje.medioDePago = this.medioDePago;
+            this.miViaje.precio = this.precio;
+            this.miViajeServicio.RegistrarViaje(this.miViaje).then(
+              (datos) => {
+                this.gif = false;
+                clearInterval(this.repetidor);
+                swal({
+                  title: "Viaje registrado",
+                  icon: "success",
+                });
+                this.router.navigate(['/Principal']);
+              }
+            );
+          }, 3000);
         }
-      );
-    }, 3000);
+        else if (dia == dd) {
+          if (hora > h) {
+            this.gif = true;
+            this.repetidor = setInterval(() => {
+              this.miViaje.cantidad = this.cant;
+              this.miViaje.comodidad = this.comodidad;
+              this.miViaje.distancia = this.distancia;
+              this.miViaje.duracion = this.duracion;
+              this.miViaje.horario = this.horario.replace("T", " ");
+              this.miViaje.latDesde = this.latDesde;
+              this.miViaje.latHasta = this.latHasta;
+              this.miViaje.legajoCliente = this.legajo;
+              this.miViaje.lngDesde = this.lngDesde;
+              this.miViaje.lngHasta = this.lngHasta;
+              this.miViaje.medioDePago = this.medioDePago;
+              this.miViaje.precio = this.precio;
+              this.miViajeServicio.RegistrarViaje(this.miViaje).then(
+                (datos) => {
+                  this.gif = false;
+                  clearInterval(this.repetidor);
+                  swal({
+                    title: "Viaje registrado",
+                    icon: "success",
+                  });
+                  this.router.navigate(['/Principal']);
+                }
+              );
+            }, 3000);
+          }
+          else {
+            swal({
+              title: "Horario invalido",
+              icon: "warning",
+            });
+          }
+        }
+        else {
+          swal({
+            title: "Horario invalido",
+            icon: "warning",
+          });
+        }
+      }
+      else {
+        this.gif = true;
+        this.repetidor = setInterval(() => {
+          this.miViaje.cantidad = this.cant;
+          this.miViaje.comodidad = this.comodidad;
+          this.miViaje.distancia = this.distancia;
+          this.miViaje.duracion = this.duracion;
+          this.miViaje.horario = this.horario.replace("T", " ");
+          this.miViaje.latDesde = this.latDesde;
+          this.miViaje.latHasta = this.latHasta;
+          this.miViaje.legajoCliente = this.legajo;
+          this.miViaje.lngDesde = this.lngDesde;
+          this.miViaje.lngHasta = this.lngHasta;
+          this.miViaje.medioDePago = this.medioDePago;
+          this.miViaje.precio = this.precio;
+          this.miViajeServicio.RegistrarViaje(this.miViaje).then(
+            (datos) => {
+              this.gif = false;
+              clearInterval(this.repetidor);
+              swal({
+                title: "Viaje registrado",
+                icon: "success",
+              });
+              this.router.navigate(['/Principal']);
+            }
+          );
+        }, 3000);
+      }
+    }
+    else {
+      swal({
+        title: "Horario invalido",
+        icon: "warning",
+      });
+    }
   }
   ngOnInit() {
     let tokenjs = localStorage.getItem("Token");
